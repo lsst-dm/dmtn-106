@@ -1,0 +1,69 @@
+\section{Introduction} \label{sec:intro}
+
+The scope of this document is to provide a general release procedure, valid for all Software Products in the Data Management LSST subsystem. The procedure as presented here can be tailored if needed.
+
+\subsection{Applicable Documents}
+
+When applicable documents change a change may be required in this document.
+\begin{tabbing}
+AUTH-NUM\= \kill
+\citeds{LDM-148} \>     DM Architecture\\
+\citeds{LDM-294} \>     DM Project Management Plan   \\
+%\citeds{LDM-564} \>     Data Management Releases for Verification/Integration \\
+% perhaps \citell{LL:AUTH-code}\>       Software Requirements Specification for \CU,\\
+\end{tabbing}
+
+\newpage
+\section{Definitions} \label{sec:definitions}
+
+\subsection{Software Product} \label{sect:swprod}
+A release is made of a SW product
+A SW Product should correspond to a single repository (git package)
+In the case of lsst a SW corresponds to multiple git packages but the single repository can be mimicked using a metapackage 
+
+
+\siubsection{Software Release} \label{sect:swrel}
+Identified by  a TAG in the SW repository
+ documented with a software release note.
+The TAG is created on a release branch after manual checks
+A released software depends only on other released software packages.
+
+
+\subsection{Software Binary Package} \label{sect:swbpkg}
+Is a binary package created by building the SW with the identified release Tag 
+Binary packages can be created to support multiple platforms (such as linux, osx, windows) if required.
+A SW package can be created from a release candidate also, or from any other identified status  in the SW repository
+
+
+\subsection{Distribution} \label{sect:distribution}
+Is a collection of binaries to be deployed in a specific configuration, for operational purposes.
+The same distribution, shall be used for validation and integration purposes.
+
+\newpage
+\section{Change control} \label{sect:cangecontrol}
+The CCB decides the timing of a release 
+Major releases shall be planned with sufficient advance notice (i.e. tied to LDM-503 Milestones)
+Patch release need to be agreed by the CCB on case by case basis
+CCB shall also approve the issues to be included in or back ported to a patch release.
+
+\newpage
+\section{Release note} \label{sect:relnote}
+List of jira issues automatically generated from the github repo [Fix in Versions(s) field in Jira can be filled by the developer if he has the information, or can be populated a posteriori when the release is done.] 
+(a Release Issue can be used also, but the native solution in Jira for this use case is the Fix in Version(s) field)
+A narrative section can be provided by the owner of the product. [ xxxing release]
+
+\newpage
+\section{Software Release Procedure} \label{sect:releaseprocedure}
+Development happens in ticket branches and will be merged to master after review
+Continuous integration is happening on master and provides binary packages and docker images nightly
+Release process starts when all required/approved changes are merged to master and CI passes
+DM CCB role: 
+Review the changes included in a major release . 
+Fix in Versions(s) to be used to propose issue to include in a major, minor or patch release (a Release Issue can be used also, but the native solution in jira for this use case is the Fix In Version(s) field)
+In some cases DMCCB may ask the TCAM to include a specific issue into a release or
+Exclude an issue from a release, and postpone it to a future major or patch release
+Approve the changes to be included in patch release (Fix In Version(s))
+Release technicalities remains similar to what is done (now) for the science pipeline.
+SQR-16 (science pipelines) new TN on release procedures
+Developer guide workflow for development activities.
+Need to add in the developer guide procedure for backporting.
