@@ -20,6 +20,7 @@ Following definitions are considered in the scope of this document.
 
 
 \subsection{Software Product} \label{sect:swprod}
+
 A Software Product is a component of the subsystem (DM) product tree.
 A release is made on a SW product.
 
@@ -28,6 +29,7 @@ In the case of DM a SW Product is implemented in multiple git packages.
 A Github \textit{metapackage} is used to identify a SW Products.
 All git packages of a SW Products will be dependencies in a Github \textit{metapackage} and released at the same time.
 
+A Software product \textit{lives} in a software repository. The LSST software repository is github.
 
 \subsection{Dependencies} \label{sect:dependencies}
 
@@ -40,11 +42,17 @@ Considering that a SW Product is identified by a \textit{metackage}, each packag
 
 All metapackages from which a SW product depends, need to be released before the SW product release is done.
 
+The dependencies information is provided in each git package, in specific files, that may vary depending on the build system.
+The dependencies information is considered part of the source code.
+
 
 \subsection{Software Release} \label{sect:swrel}
 
 A software release is identified by a TAG in the SW repository and it is documented with a software release note.
 The TAG is created on a release branch after manual checks on the last release candidate.
+
+The tag in the Github repository and the software release note should be sufficient for a developer 
+to build the binaries and execute the software.
 
 
 \subsection{Binary Package} \label{sect:swbpkg}
@@ -53,6 +61,12 @@ A binary package is a package containing executable binaries for the correspondi
 It is created building the SW provided in the release Tag. 
 Binary packages can be created to support multiple platforms (such as linux, osx, windows) if required.
 
+Binaries in general should be generated only once, and made available for their use by depending software or for deployment.
+
+The majority of DM software is using Eups for binary packaging. Other platforms can be considered, like for example \textit{conda} or \textit{pypi}.
+Software products implemented in java are using jar/war binary packaging.
+\footnote{So far there are a few technologies used to handle binary packages. It is recommendable to assess and optimize them, converging to use only. 
+Conda seems to be so far becoming a standard.}
 
 \subsection{Distribution} \label{sect:distribution}
 
@@ -65,6 +79,8 @@ A distribution can be used for different purposes:
 \item test (integration, validation, operation rehearsals) software releases
 \item provide software releases to external collaborators.
 \end{itemize}
+
+DM software products are distributed using \textit{docker}.
 
 
 \newpage
@@ -257,10 +273,10 @@ Backporting mechanism has to be documented in the developer guide, however it is
 \begin{itemize}
 \item given an issue DM-XXX fixed on a ticket branch \textit{tickets/DM-XXX} and merged to master (the ticket branch shall not be deleted in this case, until the backporting is concluded)
 \item given a release branch created based on a release candidate, or on a weekly tag
-\item backport is done from the branch to backport, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} . 
+\item a specific backporting ticket DM-YYY has to be created, and a corresponding ticket branch based on DM-XXX issue
+\item backport is done from the backporting ticket branch, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} . 
 \begin{itemize}
-\item Note that this will move the original branch, based on master, to be based on the the release branch. In case you want to keep the old branch, a new branch has to be created from the original ticket branch. 
-\item Ideally this has be done using a new DM Jira issue, where the porting is requested.
+\item Note that this will rebase the backporting branch to the release branch.
 \end{itemize}
 \item open a PR from the ported ticket branch to merge into the release branch
 \item merge the ported branch into the release branch when the PR is approved
@@ -274,6 +290,7 @@ In a special case, that an issue cannot be fixed on master, the ticket branch ca
 The porting can be applied also in case that an issue, implemented on master after the release branch has been cut, has to be included in the release.
 
 The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may required a considerable use of development resources or delay in the final release availability.
+
 
 \subsection{Additional Release Candidates} \label{sect:newrc}
 
