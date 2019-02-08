@@ -1,6 +1,6 @@
 \section{Introduction} \label{sec:intro}
 
-The scope of this document is to provide a release procedure valid for all Software Products in the LSST Data Management subsystem. The procedure as presented here can be tailored accordingly to specific SW products needs.
+The scope of this document is to provide a release procedure valid for all Software Products in the LSST Data Management subsystem. The procedure as presented here can be tailored accordingly to specific SW product needs.
 
 \subsection{Applicable Documents}
 
@@ -27,23 +27,23 @@ A release is made on a SW product.
 A SW Product should correspond to a single repository (git package).
 In the case of DM a SW Product is implemented in multiple git packages.
 A Github \textit{metapackage} is used to identify a SW Products.
-All git packages of a SW Products will be dependencies in a Github \textit{metapackage} and released at the same time.
+All git packages of a SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
 
 A Software product \textit{lives} in a software repository. The LSST software repository is github.
 
 \subsection{Dependencies} \label{sect:dependencies}
 
-Considering that a SW Product is identified by a \textit{metackage}, each package can depend from:
+Considering that a SW Product is identified by a \textit{metapackage}, each package can depend from:
 
 \begin{itemize}
-\item others metapackages: to resolve Github packages released in other SW products (metapackages)
+\item other metapackages: to resolve Github packages released in other SW products (metapackages)
 \item a Github package contained in the same metapackage, and therefore part of the same SW product
 \end{itemize}
 
-All metapackages from which a SW product depends, need to be released before the SW product release is done.
+All metapackages on which a SW product depends, need to be released before the SW product release is done.
 
-The dependencies information is provided in each git package, in specific files, that may vary depending on the build system.
-The dependencies information is considered part of the source code.
+The dependency information is provided in each git package, in specific files, that may vary depending on the build system.
+It is also considered part of the source code.
 
 
 \subsection{Software Release} \label{sect:swrel}
@@ -61,11 +61,11 @@ A binary package is a package containing executable binaries for the correspondi
 It is created building the SW provided in the release Tag. 
 Binary packages can be created to support multiple platforms (such as linux, osx, windows) if required.
 
-Binaries in general should be generated only once, and made available for their use by depending software or for deployment.
+Binaries in general should be generated only once, and made available for their use by dependent software or for deployment.
 
 The majority of DM software is using Eups for binary packaging. Other platforms can be considered, like for example \textit{conda} or \textit{pypi}.
 Software products implemented in java are using jar/war binary packaging.
-\footnote{So far there are a few technologies used to handle binary packages. It is recommendable to assess and optimize them, converging to use only. 
+\footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one. 
 Conda seems to be so far becoming a standard.}
 
 \subsection{Distribution} \label{sect:distribution}
@@ -96,7 +96,7 @@ For example:
 has been the last science pipelines release in 2016. The first number is the major version and the the second number is the minor version. 
 
 
-It is recommended to switch to Semantic Versioning, in order to improve dependencies management.
+It is recommended to switch to Semantic Versioning, in order to improve dependency management.
 
 
 \subsubsection{Branch Naming}
@@ -113,7 +113,7 @@ where {\bf M} is the major version and {\bf m} is the minor version.
 \newpage
 \section{Change control} \label{sect:changecontrol}
 
-The DMCCB is in charge to plan all major and minor release.
+The DMCCB is in charge of planning all major and minor releases.
 The DM Release Plan LDM-564 will provide the expected schedule, based on P6 milestones.
 
 Changes to the release plan need to be proposed to the DMCCB using RFC Jira issues.
@@ -141,13 +141,13 @@ The release note documents the content of a release.
 
 Following information are provided:
 \begin{itemize}
-\item Installation instructions. To be provided manually by the release responsible, usually the product owner.
-\item List of jira issue included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issue to be listed for documentation purpose. 
-\item Narrative section describing the content of the release. To be provided manually be the release responsible, usually the product owner.
+\item Installation instructions. To be provided manually by the person responsible for the release, usually the product owner.
+\item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issues to be listed for documentation purpose. 
+\item Narrative section describing the content of the release. To be provided manually be the person responsible for the release, usually the product owner.
 \item Technical information like tag in github, dependencies, binary packages, etc. To be extracted automatically from Github or other tools.
 \end{itemize}
 
-Once the field \textit{Fix in Version(s)} has been introduced in the Jira DM project, it shal be made consistent with the release note (automatically).
+Once the field \textit{Fix in Version(s)} has been introduced in the Jira DM project, it shall be made consistent with the release note (automatically).
 
 
 \newpage
@@ -159,7 +159,7 @@ This release procedure has been derived from the \textit{Stack release playbook}
 
 Development activities are not part of the release process, but are the starting point for a stable and reliable master branch in all Github software packages.
 
-Development activities follows the \citep{DevGuide} developer guide. All changes are done on tickets branches and reviewed using the Pull Request mechanism before merging to master.
+Development activities follow the \citep{DevGuide} developer guide. All changes are done on ticket branches and reviewed using the Pull Request mechanism before merging to master.
 Ticket branches are removed once merged.
 
 Each time a change is merged into master, the following activities should be performed:
@@ -175,12 +175,12 @@ At the moment, continuous integration is done prior to merge the changes into ma
 
 \subsection{Daily and Weekly builds} \label{sect:weekly}
 
-Daly and weekly build are performed in order to have fixed references in time.
+Daily and weekly builds are performed in order to have fixed references in time.
 They ensure periodically that no breaking changes have been introduced. 
 They can be used as a starting point for a development activity or, more relevant for this document, as starting point for a release.
 
-Daily builds, do not generate a tag in the Github repositories. 
-When a weekly builds is done, a corresponding tag in the Github repository is created.
+Daily builds do not generate a tag in the Github repositories. 
+When a weekly build is done, a corresponding tag in the Github repository is created.
 Despite weekly builds are considered releases for Github, from a release management point of view they are not.
 
  
@@ -190,13 +190,13 @@ The preparation of the next release is announced using a community post.
 
 This has to be done few days before the release activity starts.
 
-In this way, all contributors will be able to provided feedbacks, like for example additional issues expected to be included in the release.
-Base on the received feedbacks, DMCCB can take corrective actions such as delay the release.
+In this way, all contributors will be able to provided feedback, like for example additional issues expected to be included in the release.
+Base on the received feedback, DMCCB can take corrective actions such as delaying the release.
 
 
 \subsection{First Release Candidate} \label{sect:firstrc}
 
-The first release candidate on a release is create when:
+The first release candidate on a release is created when:
 
 \begin{itemize}
 \item all issues that are suppose to be included in it have been implemented and merged into master.
@@ -229,7 +229,7 @@ If the Jenkins job is not available, the release candidate should be created man
 \item creating the distribution package
 \end{itemize}
 
-At today, the majority of these steps are integrated in Jenkins jobs. This make it impossible to complete the release process without the use of the continuous integration system.
+As of today, the majority of these steps are integrated in Jenkins jobs. This makes it impossible to complete the release process without the use of the continuous integration system.
 
 \subsection{Other Related Artifacts}
 
@@ -244,9 +244,9 @@ Together with the creation of the release candidate, other artifacts may need to
 
 \subsection{Release Candidates Validation} \label{sect:rcvalidation}
 
-The release candidate need to be validated, ensuring that it is consistent with what expected.
+The release candidate needs to be validated, ensuring that it is consistent with what expected.
 
-In an ideal case, a test campaign following a specific test plan should be conducted, demonstrating that the release candidates, and therefor the forthcoming release, is behaving as expected.
+In an ideal case, a test campaign following a specific test plan should be conducted, demonstrating that the release candidates, and therefore the forthcoming release, is behaving as expected.
 
 Practically, the validation in many cases can be:
 
@@ -264,7 +264,7 @@ This is a new document created for each major release.
 
 \subsection{Resolving Problems}
 
-In case problems are found during the validation, a DM issue need to opened in Jira.
+In case problems are found during the validation, a DM issue needs to be opened in Jira.
 This issue shall follow the usual development process as described in the developer guide. 
 The fix will be first implemented in a ticket branch, reviewed and merged to master.
 Once the fix has been proved to work, it can be backported to the release branch. 
@@ -283,13 +283,13 @@ Backporting mechanism has to be documented in the developer guide, however it is
 \item remove the ported branch and the original branch
 \end{itemize}
 
-Note that porting mechanism is a development activity, under the responsibility of the development team, and therefor need to be documented in the developer guide and removed from this document.
+Note that porting mechanism is a development activity, under the responsibility of the development team, and therefore needs to be documented in the developer guide and removed from this document.
 
 In a special case, that an issue cannot be fixed on master, the ticket branch can be opened based on the release branch.
 
 The porting can be applied also in case that an issue, implemented on master after the release branch has been cut, has to be included in the release.
 
-The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may required a considerable use of development resources or delay in the final release availability.
+The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources or delay in the final release availability.
 
 
 \subsection{Additional Release Candidates} \label{sect:newrc}
