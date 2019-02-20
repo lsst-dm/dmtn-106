@@ -1,6 +1,6 @@
 \section{Introduction} \label{sec:intro}
 
-The scope of this document is to provide a release procedure valid for all Software Products in the LSST Data Management subsystem. The procedure as presented here can be tailored accordingly to specific SW product needs.
+The scope of this document is to provide a release procedure valid for all software products in the LSST Data Management subsystem. The procedure  can fo course be tailored according to specific software product needs.
 
 \subsection{Applicable Documents}
 
@@ -16,34 +16,28 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-Following definitions are considered in the scope of this document.
+This document uses certain terms which are often overloaded -  we define these terms here for the scope of this document.
 
 
 \subsection{Software Product} \label{sect:swprod}
 
 A Software Product is a component of the subsystem (DM) product tree.
-A release is made on a SW product.
+Releases are made of  SW products (\secref{sec:swrel}).
 
 A SW Product should correspond to a single repository (git package).
-In the case of DM a SW Product is implemented in multiple git packages.
-A Github \textit{metapackage} is used to identify a SW Products.
-All git packages of a SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
+Where a SW Product is implemented in multiple git packages
+a Github \textit{metapackage} is used to identify the SW Product.
+All git packages of the SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
 
-A Software product \textit{lives} in a software repository. The LSST software repository is github.
+Software products \textit{live} in a software repository. The LSST software repository is github\footnote{\url{https://github.com/lsst}}.
 
 \subsection{Dependencies} \label{sect:dependencies}
 
-Considering that a SW Product is identified by a \textit{metapackage}, each package can depend from:
 
-\begin{itemize}
-%\item other metapackages: to resolve Github packages released in other SW products (metapackages)
-\item a Github package contained in the same metapackage, and therefore part of the same SW product
-\end{itemize}
-
-%All metapackages on which a SW product depends, need to be released before the SW product release is done.
+A package may only depend on other packages. Third party dependancies are either packages or in the conda environement.
 
 The dependency information is provided in each git package, in specific files, that may vary depending on the build system such as requirements.txt, eups table file, etc.
-It is also considered part of the source code.
+It is considered part of the source code and controlled  and versioned in the same manner as code.
 
 
 \subsection{Software Release} \label{sect:swrel}
@@ -51,7 +45,7 @@ It is also considered part of the source code.
 A software release is identified by a TAG in the SW repository and it is documented with a software release note.
 The TAG is created on a release branch after manual checks on the last release candidate.
 
-The tag in the Github repository and the software release note should be sufficient for a developer 
+The tag in the Github repository and the software release note should be sufficient for a developer
 to build the binaries and execute the software.
 
 
@@ -59,14 +53,14 @@ to build the binaries and execute the software.
 \subsection{Binary Package} \label{sect:swbpkg}
 
 A binary package is a package containing executable binaries for the corresponding release.
-It is created building the SW provided in the release Tag. 
+It is created building the SW provided in the release Tag.
 Binary packages can be created to support multiple platforms (such as linux, osx, windows) if required.
 
 Binaries in general should be generated only once, and made available for their use by dependent software or for deployment.
 
 The majority of DM software is using Eups for binary packaging. Other platforms can be considered, like for example \textit{conda} or \textit{pypi}.
 Software products implemented in java are using jar/war binary packaging.
-\footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one. 
+\footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one.
 Conda seems to be so far becoming a standard.}
 
 \subsection{Distribution} \label{sect:distribution}
@@ -94,7 +88,7 @@ For example:
 16.0
 \end{verbatim}
 
-has been the last science pipelines release in 2016. The first number is the major version and the the second number is the minor version. 
+has been the last science pipelines release in 2016. The first number is the major version and the the second number is the minor version.
 
 
 It is recommended to switch to Semantic Versioning, in order to improve dependency management, and be able to manage patch releases.
@@ -150,7 +144,7 @@ The release note documents the content of a release.
 Following information are provided:
 \begin{itemize}
 \item Installation instructions. To be provided manually by the person responsible for the release, usually the product owner.
-\item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issues to be listed for documentation purpose. 
+\item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issues to be listed for documentation purpose.
 \item Narrative section describing the content of the release. To be provided manually be the person responsible for the release, usually the product owner.
 \item Technical information like tag in github, dependencies, binary packages, etc. To be extracted automatically from Github or other tools.
 \end{itemize}
@@ -184,14 +178,14 @@ At the moment, continuous integration is done prior to merge the changes into ma
 \subsection{Daily and Weekly builds} \label{sect:weekly}
 
 Daily and weekly builds are performed in order to have fixed references in time.
-They ensure periodically that no breaking changes have been introduced. 
+They ensure periodically that no breaking changes have been introduced.
 They can be used as a starting point for a development activity or, more relevant for this document, as starting point for a release.
 
-Daily builds do not generate a tag in the Github repositories. 
+Daily builds do not generate a tag in the Github repositories.
 When a weekly build is done, a corresponding tag in the Github repository is created.
 Despite weekly builds are considered releases for Github, from a release management point of view they are not.
 
- 
+
 \subsection{Announcement} \label{sect:anaouncement}
 
 The preparation of the next release is announced using a community post.
@@ -217,7 +211,7 @@ In case a weekly is presenting problems that may affect the release, the DMCCB w
 The creation of the first release candidate is done using the Jenkins job:
 
 \begin{verbatim}
-releases/official-release 
+releases/official-release
 \end{verbatim}
 
 with the following parameters:
@@ -234,7 +228,7 @@ If the Jenkins job is not available, the release candidate should be created man
 \begin{itemize}
 \item creating the release branch from the last weekly build (codekit, functionality still to be added, branches can be created manually)
 \item creating a release candidate (codekit)
-\item creating the binaries packages 
+\item creating the binaries packages
 \item creating the distribution package
 \end{itemize}
 
@@ -274,16 +268,16 @@ This is a new document created for each major release.
 \subsection{Resolving Problems}
 
 In case problems are found during the validation, a DM issue needs to be opened in Jira.
-This issue shall follow the usual development process as described in the developer guide. 
+This issue shall follow the usual development process as described in the developer guide.
 The fix will be first implemented in a ticket branch, reviewed and merged to master.
-Once the fix has been proved to work, it can be backported to the release branch. 
+Once the fix has been proved to work, it can be backported to the release branch.
 Backporting mechanism has to be documented in the developer guide, however it is here summarized:
 
 \begin{itemize}
 \item given an issue DM-XXX fixed on a ticket branch \textit{tickets/DM-XXX} and merged to master (the ticket branch shall not be deleted in this case, until the backporting is concluded)
 \item given a release branch created based on a release candidate, or on a weekly tag
 \item a specific backporting ticket DM-YYY has to be created, and a corresponding ticket branch based on DM-XXX issue
-\item backport is done from the backporting ticket branch, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} . 
+\item backport is done from the backporting ticket branch, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} .
 \begin{itemize}
 \item Note that this will rebase the backporting branch to the release branch.
 \end{itemize}

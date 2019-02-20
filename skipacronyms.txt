@@ -10,3 +10,8 @@ http
 p
 s
 A
+XXX
+AUTH
+NUM
+TAG
+YYY
