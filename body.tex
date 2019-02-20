@@ -16,10 +16,10 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-This document uses certain terms which are often overloaded -  we define these terms here for the scope of this document.
+This document uses certain terms which are often overloaded -  in this seciton we define these terms  as intended in this document.
 
 
-\subsection{Software Product} \label{sect:swprod}
+\subsection{Software Product} \label{sec:swprod}
 
 A Software Product is a component of the subsystem (DM) product tree.
 Releases are made of  SW products (\secref{sec:swrel}).
@@ -29,28 +29,28 @@ Where a SW Product is implemented in multiple git packages
 a Github \textit{metapackage} is used to identify the SW Product.
 All git packages of the SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
 
-Software products \textit{live} in a software repository. The LSST software repository is github\footnote{\url{https://github.com/lsst}}.
+Software products \textit{live} in a software repository. The LSST software repository is Github\footnote{\url{https://github.com/lsst}}.
 
-\subsection{Dependencies} \label{sect:dependencies}
+\subsection{Dependencies} \label{sec:dependencies}
 
 
 A package may only depend on other packages. Third party dependancies are either packages or in the conda environement.
 
-The dependency information is provided in each git package, in specific files, that may vary depending on the build system such as requirements.txt, eups table file, etc.
-It is considered part of the source code and controlled  and versioned in the same manner as code.
+The dependency information is provided in each git package in specific dependancy files  according to the build system e.g.  requirements.txt, eups table file, etc.
+These files , and hence the dependancies,  are considered part of the source code and controlled  and versioned in the same manner.
 
 
-\subsection{Software Release} \label{sect:swrel}
+\subsection{Software Release} \label{sec:swrel}
 
 A software release is identified by a TAG in the SW repository and it is documented with a software release note.
-The TAG is created on a release branch after manual checks on the last release candidate.
+The TAG is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
 
 The tag in the Github repository and the software release note should be sufficient for a developer
 to build the binaries and execute the software.
 
 
 
-\subsection{Binary Package} \label{sect:swbpkg}
+\subsection{Binary Package} \label{sec:swbpkg}
 
 A binary package is a package containing executable binaries for the corresponding release.
 It is created building the SW provided in the release Tag.
@@ -63,7 +63,7 @@ Software products implemented in java are using jar/war binary packaging.
 \footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one.
 Conda seems to be so far becoming a standard.}
 
-\subsection{Distribution} \label{sect:distribution}
+\subsection{Distribution} \label{sec:distribution}
 
 A distribution is a collection of binary packages to be deployed together.
 
@@ -79,7 +79,7 @@ DM software products are distributed using \textit{docker}.
 
 
 \newpage
-\subsection{Versioning and Naming} \label{sect:versioning}
+\subsection{Versioning and Naming} \label{sec:versioning}
 
 DM software is versioned using two digits separated by a "." .
 For example:
@@ -113,7 +113,7 @@ where {\bf M} is the major version and {\bf m} is the minor version.
 The letters {\bf b} and {\bf x} indicate that this is a branch.
 
 \newpage
-\section{Change control} \label{sect:changecontrol}
+\section{Change control} \label{sec:changecontrol}
 
 The DMCCB is in charge of planning all major and minor releases.
 The DM Release Plan LDM-564 will provide the expected schedule, based on P6 milestones.
@@ -126,7 +126,7 @@ A patch release has to be requested to the DMCCB using RFC Jira issues, specifyi
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
 
 
-\subsection{Issue Management} \label{sect:issues}
+\subsection{Issue Management} \label{sec:issues}
 
 The release is identified in Jira using a release issue.
 
@@ -137,7 +137,7 @@ This requires changes in the DM Jira project.
 
 
 \newpage
-\section{Release Note} \label{sect:relnote}
+\section{Release Note} \label{sec:relnote}
 
 The release note documents the content of a release.
 
@@ -146,18 +146,18 @@ Following information are provided:
 \item Installation instructions. To be provided manually by the person responsible for the release, usually the product owner.
 \item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issues to be listed for documentation purpose.
 \item Narrative section describing the content of the release. To be provided manually be the person responsible for the release, usually the product owner.
-\item Technical information like tag in github, dependencies, binary packages, etc. To be extracted automatically from Github or other tools.
+\item Technical information like tag in Github, dependencies, binary packages, etc. To be extracted automatically from Github or other tools.
 \end{itemize}
 
 Once the field \textit{Fix in Version(s)} has been introduced in the Jira DM project, it shall be made consistent with the release note. This process should be automated.
 
 
 \newpage
-\section{Software Release Procedure} \label{sect:releaseprocedure}
+\section{Software Release Procedure} \label{sec:releaseprocedure}
 
 This release procedure has been derived from the \textit{Stack release playbook} SQR-016.
 
-\subsection{Development} \label{sect:dev}
+\subsection{Development} \label{sec:dev}
 
 Development activities are not part of the release process, but are the starting point for a stable and reliable master branch in all Github software packages.
 
@@ -172,10 +172,10 @@ Each time a change is merged into master, the following activities should be per
 \item build downstream dependencies: CI build on SW products that depend from the newly build SW product.
 \end{itemize}
 
-At the moment, continuous integration is done prior to merge the changes into master, using the ticket branch. Binary packages (eups) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sect:weekly}).
+At the moment, continuous integration is done prior to merge the changes into master, using the ticket branch. Binary packages (eups) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
 
 
-\subsection{Daily and Weekly builds} \label{sect:weekly}
+\subsection{Daily and Weekly builds} \label{sec:weekly}
 
 Daily and weekly builds are performed in order to have fixed references in time.
 They ensure periodically that no breaking changes have been introduced.
@@ -186,7 +186,7 @@ When a weekly build is done, a corresponding tag in the Github repository is cre
 Despite weekly builds are considered releases for Github, from a release management point of view they are not.
 
 
-\subsection{Announcement} \label{sect:anaouncement}
+\subsection{Announcement} \label{sec:anaouncement}
 
 The preparation of the next release is announced using a community post.
 
@@ -196,7 +196,7 @@ In this way, all contributors will be able to provided feedback, like for exampl
 Base on the received feedback, DMCCB can take corrective actions such as delaying the release.
 
 
-\subsection{First Release Candidate} \label{sect:firstrc}
+\subsection{First Release Candidate} \label{sec:firstrc}
 
 The first release candidate on a release is created when:
 
@@ -245,7 +245,7 @@ Together with the creation of the release candidate, other artifacts may need to
 \end{itemize}
 
 
-\subsection{Release Candidates Validation} \label{sect:rcvalidation}
+\subsection{Release Candidates Validation} \label{sec:rcvalidation}
 
 The release candidate needs to be validated, ensuring that it is consistent with what expected.
 
@@ -295,7 +295,7 @@ The porting can be applied also in case that an issue, implemented on master aft
 The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources or delay in the final release availability.
 
 
-\subsection{Additional Release Candidates} \label{sect:newrc}
+\subsection{Additional Release Candidates} \label{sec:newrc}
 
 Once one or more issues have been fixed on the release branch, a new release candidate has to be generated using the Jenkins job \textit{official-release} using following parameters:
 
@@ -305,7 +305,7 @@ Once one or more issues have been fixed on the release branch, a new release can
 \item {\bf O\_LATEST}: false
 \end{itemize}
 
-\subsection{Final Release} \label{sect:finalrelease}
+\subsection{Final Release} \label{sec:finalrelease}
 
 Once a final release candidate has been identified, the final release can be created.
 
@@ -319,17 +319,17 @@ This has to be done using the Jenkins job \textit{official-release} as previousl
 
 \newpage
 
-\section{Patch Releases} \label{sect:patchreleases}
+\section{Patch Releases} \label{sec:patchreleases}
 
 In the case that the DMCCB approves a proposed patch release, the process shall be:
 
 \begin{itemize}
 \item create the release branches from the available release tags on the Github packages impacted by the fixes
 \item backport the requested issues
-\item create a release candidate, for example \textit{v17.0.1.rc1} using the the same approach explained above (\ref{sect:newrc})
+\item create a release candidate, for example \textit{v17.0.1.rc1} using the the same approach explained above (\ref{sec:newrc})
 \item validate the release candidate
 \item fix eventual problems found in the release candidate and repeat the last 2 steps until a valid release candidate is found
-\item create a final release as described above (\ref{sect:finalrelease}).
+\item create a final release as described above (\ref{sec:finalrelease}).
 \end{itemize}
 
 
