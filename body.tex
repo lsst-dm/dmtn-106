@@ -83,35 +83,35 @@ this may be used in a few ways see \url{https://pipelines.lsst.io/install/index.
 
 \newpage
 \subsection{Versioning and Naming} \label{sec:versioning}
-
-DM software is versioned using two digits separated by a "." .
-For example:
-
-\begin{verbatim}
-16.0
-\end{verbatim}
-
-has been the last science pipelines release in 2016. The first number is the major version and the the second number is the minor version.
-
-
-It is recommended to switch to Semantic Versioning, in order to improve dependency management, and be able to manage patch releases.
+DM will  switch to Semantic Versioning,  this will help improve dependency management, and make  managing patch releases more comprehensible.
 The versioning schema will have 3 digits separated by a "." .For example :
 
 \begin{verbatim}
 16.0.0
 \end{verbatim}
 
+The repository at this stage would be tagged 16.0.0 .
 One should note in this scheme there are no padding zeros thus:
 \begin{verbatim}
-16.1.0   $\ne$ 16.10.0
+16.1.0   $\neq$ 16.10.0
 \end{verbatim}
+
+DM software is currently versioned using two digits separated by a "." .
+For example Science Pipelines latest release:
+
+\begin{verbatim}
+17.0
+\end{verbatim}
+The first number is the major version and the the second number is the minor version.
+
+
 
 \subsubsection{Branch Naming}
 
 In order to clearly distinguish release branches from tags and other branches, the following naming scheme is suggested:
 
 \begin{verbatim}
-b.<M>.<m>.x
+b.<M>.<n>.x
 \end{verbatim}
 
 where {\bf M} is the major version and {\bf m} is the minor version.
@@ -127,8 +127,8 @@ The DM Release Plan LDM-564 provides the expected schedule for major features, b
 Changes to the release plan need to be proposed to the DMCCB using RFC Jira issues.
 
 The DMCCB must  also  approve any  patch release requests,
-which should  be requested to the DMCCB using an RFC Jira issue(or more than one if needed).
-The issue should specify what needs to be fixed in the release and why, it should preferable specify DM issues that are requested to be included in the patch.
+which should  use an RFC Jira issue.
+The issue should specify what needs to be fixed in the release and why, it shall specify DM issues that are requested to be included in the patch.
 
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
 
