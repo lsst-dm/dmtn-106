@@ -1,6 +1,6 @@
 \section{Introduction} \label{sec:intro}
 
-The scope of this document is to provide a release procedure valid for all software products in the LSST Data Management subsystem. The procedure  can fo course be tailored according to specific software product needs.
+The scope of this document is to provide a release procedure valid for all software products in the LSST Data Management subsystem. The procedure  can of course be tailored according to specific software product needs.
 
 \subsection{Applicable Documents}
 
@@ -16,7 +16,7 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-This document uses certain terms which are often overloaded -  in this seciton we define these terms  as intended in this document.
+This document uses certain terms which are often overloaded -  in this section we define these terms  as intended in this document.
 
 
 \subsection{Software Product} \label{sec:swprod}
@@ -25,7 +25,7 @@ A Software Product is a component of the subsystem (DM) product tree.
 Releases are made of  SW products (\secref{sec:swrel}).
 
 A SW Product should correspond to a single repository (git package).
-Where a SW Product is implemented in multiple git packages
+Where a SW Product is comprised of multiple git packages
 a Github \textit{metapackage} is used to identify the SW Product.
 All git packages of the SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
 
@@ -34,16 +34,18 @@ Software products \textit{live} in a software repository. The LSST software repo
 \subsection{Dependencies} \label{sec:dependencies}
 
 
-A package may only depend on other packages. Third party dependancies are either packages or in the conda environement.
+A package may only depend on other packages. Third party dependencies are either packages or in the conda environment.
 
-The dependency information is provided in each git package in specific dependancy files  according to the build system e.g.  requirements.txt, eups table file, etc.
-These files , and hence the dependancies,  are considered part of the source code and controlled  and versioned in the same manner.
+The dependency information is provided in each git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
+These files , and hence the dependencies,  are considered part of the source code and controlled  and versioned in the same manner.
 
 
 \subsection{Software Release} \label{sec:swrel}
 
-A software release is identified by a TAG in the SW repository and it is documented with a software release note.
-The TAG is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
+A software release is  a consciously identified version of a  software product
+documented with a software release note.
+The identifier is usually of the form NN.m (see \secref{sec:versioning}): and is used also as a  tag in the SW repository.
+The tag is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
 
 The tag in the Github repository and the software release note should be sufficient for a developer
 to build the binaries and execute the software.
@@ -53,15 +55,15 @@ to build the binaries and execute the software.
 \subsection{Binary Package} \label{sec:swbpkg}
 
 A binary package is a package containing executable binaries for the corresponding release.
-It is created building the SW provided in the release Tag.
-Binary packages can be created to support multiple platforms (such as linux, osx, windows) if required.
+It is created by building the SW provided in the release tag.
+Binary packages can be created to support multiple platforms (such as Linux, OSX, windows) if required.
 
 Binaries in general should be generated only once, and made available for their use by dependent software or for deployment.
 
-The majority of DM software is using Eups for binary packaging. Other platforms can be considered, like for example \textit{conda} or \textit{pypi}.
+The majority of DM software is using EUPS for binary packaging. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
 Software products implemented in java are using jar/war binary packaging.
 \footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one.
-Conda seems to be so far becoming a standard.}
+Conda seems to have become a standard for python based projects.}
 
 \subsection{Distribution} \label{sec:distribution}
 
@@ -70,12 +72,13 @@ A distribution is a collection of binary packages to be deployed together.
 A distribution can be used for different purposes:
 
 \begin{itemize}
-\item make available software releases for operations or commissioning
-\item test (integration, validation, operation rehearsals) software releases
-\item provide software releases to external collaborators.
+\item to make available software releases for operations or commissioning
+\item to test (integration, validation, operation rehearsals) software releases
+\item to provide software releases to external collaborators.
 \end{itemize}
 
-DM software products are distributed using \textit{docker}.
+The main DM software product currently being distributed is the Science Pipeline Stack -
+this may be used in a few ways see \url{https://pipelines.lsst.io/install/index.html}
 
 
 \newpage
@@ -98,11 +101,14 @@ The versioning schema will have 3 digits separated by a "." .For example :
 16.0.0
 \end{verbatim}
 
-
+One should note in this scheme there are no padding zeros thus:
+\begin{verbatim}
+16.1.0   $\ne$ 16.10.0
+\end{verbatim}
 
 \subsubsection{Branch Naming}
 
-In order to clearly distinguish release branches from tags and other branches, following naming is suggested:
+In order to clearly distinguish release branches from tags and other branches, the following naming scheme is suggested:
 
 \begin{verbatim}
 b.<M>.<m>.x
@@ -115,13 +121,14 @@ The letters {\bf b} and {\bf x} indicate that this is a branch.
 \newpage
 \section{Change control} \label{sec:changecontrol}
 
-The DMCCB is in charge of planning all major and minor releases.
-The DM Release Plan LDM-564 will provide the expected schedule, based on P6 milestones.
+The DMCCB is in charge of approving the changes which go in  all major and minor releases.
+The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones.
 
 Changes to the release plan need to be proposed to the DMCCB using RFC Jira issues.
 
-The DMCCB is also in charge of approving patch release requests.
-A patch release has to be requested to the DMCCB using RFC Jira issues, specifying which fixes, DM issues, are requested to be included in the CCB.
+The DMCCB must  also  approve any  patch release requests,
+which should  be requested to the DMCCB using an RFC Jira issue(or more than one if needed).
+The issue should specify what needs to be fixed in the release and why, it should preferable specify DM issues that are requested to be included in the patch.
 
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
 
@@ -132,8 +139,8 @@ The release is identified in Jira using a release issue.
 
 All issues to be included in a release shall be added as blocking to the release issue.
 
-It is recommended to use the field \textit{Fix in Version(s)} provided by Jira.
-This requires changes in the DM Jira project.
+We should start to  use the field \textit{Fix in Version(s)} which is standard in Jira
+but requires changes in the DM Jira project.
 
 
 \newpage
@@ -141,7 +148,7 @@ This requires changes in the DM Jira project.
 
 The release note documents the content of a release.
 
-Following information are provided:
+The following information should be  provided:
 \begin{itemize}
 \item Installation instructions. To be provided manually by the person responsible for the release, usually the product owner.
 \item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted in the first place. Other issues to be listed for documentation purpose.
@@ -172,7 +179,7 @@ Each time a change is merged into master, the following activities should be per
 \item build downstream dependencies: CI build on SW products that depend from the newly build SW product.
 \end{itemize}
 
-At the moment, continuous integration is done prior to merge the changes into master, using the ticket branch. Binary packages (eups) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
+At the moment, continuous integration is done prior to merge the changes into master, using the ticket branch. Binary packages (EUPS) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
 
 
 \subsection{Daily and Weekly builds} \label{sec:weekly}
@@ -206,7 +213,7 @@ The first release candidate on a release is created when:
 \item the product owner confirms that the weekly is good to go. \footnote{This is not a full test, but just ensure that there are no regressions nor problems at a first glance. Complete tests will be done on the release candidates.}
 \end{itemize}
 
-In case a weekly is presenting problems that may affect the release, the DMCCB will decide if delay the release start or kick--off the process and fix the problems in forthcomming release candidates.
+In case a weekly is presenting problems that may affect the release, the DMCCB will decide if delay the release start or kick--off the process and fix the problems in forthcoming release candidates.
 
 The creation of the first release candidate is done using the Jenkins job:
 
