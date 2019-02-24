@@ -84,24 +84,18 @@ this may be used in a few ways see \url{https://pipelines.lsst.io/install/index.
 \newpage
 \subsection{Versioning and Naming} \label{sec:versioning}
 DM will  switch to Semantic Versioning \footnote{\url{https://semver.org/spec/v2.0.0.html}},  this will help improve dependency management, and make  managing patch releases more comprehensible.
-The versioning schema will have 3 digits separated by a "." .For example :
+The versioning schema will have 3 digits separated by a "." . For example :
+\\
+$16.0.0$
 
-\begin{verbatim}
-16.0.0
-\end{verbatim}
-
-The repository at this stage would be tagged 16.0.0 .
+The repository at this stage would be tagged $16.0.0$ .
 One should note in this scheme there are no padding zeros thus:
-\begin{verbatim}
-16.1.0   $\neq$ 16.10.0
-\end{verbatim}
+\\
+$16.1.0   \neq 16.10.0$
 
 DM software is currently versioned using two digits separated by a "." .
-For example Science Pipelines latest release:
-
-\begin{verbatim}
-17.0
-\end{verbatim}
+For example Science Pipelines latest release:\\
+$17.0$
 The first number is the major version and the the second number is the minor version.
 
 
@@ -121,13 +115,12 @@ The letters {\bf b} and {\bf x} indicate that this is a branch.
 \newpage
 \section{Change control} \label{sec:changecontrol}
 
-The DMCCB is in charge of approving the changes which go in  all major and minor releases.
+The DMCCB is in charge of approving the changes which go in  all releases (major, minori, or patch).
 The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones.
 
-Changes to the release plan need to be proposed to the DMCCB using RFC Jira issues.
+Changes to the release plan  thus are  at least partially controlled the LSST chancge cotrol  process as  milesotnes are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
 
-The DMCCB must  also  approve any  patch release requests,
-which should  use an RFC Jira issue.
+Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
 The issue should specify what needs to be fixed in the release and why, it shall specify DM issues that are requested to be included in the patch.
 
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
@@ -168,9 +161,7 @@ This release procedure has been derived from the \textit{Stack release playbook}
 \subsection{Development} \label{sec:dev}
 
 Development activities are not part of the release process, but are the starting point for a stable and reliable master branch in all Github software packages.
-
-Development activities follow the \citedsp{DevGuide} developer guide. All changes are done on ticket branches and reviewed using the Pull Request mechanism before merging to master.
-Ticket branches are removed once merged.
+The \citedsp{DevGuide} developer guide lays out the guidelines and process. All changes are done on ticket branches and reviewed using the Pull Request mechanism before merging to master.
 
 Each time a change is merged into master, the following activities should be performed:
 
@@ -205,8 +196,8 @@ releases - they are release candidate starting points.
 The preparation of the next release is announced using a community post.
 This has to be done few days before the release activity starts.
 
-In this way, all contributors will be able to provided feedback, like for example additional issues expected to be included in the release.
-Based on the received feedback, DMCCB can take corrective actions such as delaying the release.
+In this way, all contributors will be able to provided feedback, for example additional issues expected to be included in the release.
+Based on the feedback, DMCCB can take corrective actions such as delaying the release.
 
 
 \subsection{First Release Candidate} \label{sec:firstrc}
@@ -252,17 +243,20 @@ As of today, the majority of these steps are integrated in Jenkins jobs. This ma
 Together with the creation of the release candidate, other artifacts may need to be branched, and possibly have a first release candidate also:
 
 \begin{itemize}
-\item documentation: release note are usually part of a documentation endpoint, similar to pipelines.lsst.io (for science pipelines). In order to consolidate all information relevant for the new release, a corresponding branch need to be created.
-\item environment, for example conda environment definition
-\item others; still referring to the science pipelines, the package where \textit{newinstal.sh} is developed, need to have a corresponding branch
+\item Documentation: release note are usually part of a documentation endpoint, similar to pipelines.lsst.io (for science pipelines). In order to consolidate all information relevant for the new release, a corresponding branch need to be created.
+\item Environments  as needed :
+	\begin{itemize}
+	\item   Conda environment definition.
+	\item  Envronment packageis like \textit{lsst}  where \textit{newinstal.sh} is developed for pipelines.
+	\end{itemize}
 \end{itemize}
 
 
 \subsection{Release Candidates Validation} \label{sec:rcvalidation}
 
-The release candidate needs to be validated, ensuring that it is consistent with what expected.
+The release candidate needs to be validateid.
 
-In an ideal case, a test campaign following a specific test plan should be conducted, demonstrating that the release candidates, and therefore the forthcoming release, is behaving as expected.
+In an ideal case, a test campaign following a specific test plan should be conducted, demonstrating that the release candidate, and therefore the forthcoming release, is behaving as required and expected.
 
 Practically, the validation in many cases can be:
 
@@ -280,16 +274,19 @@ This is a new document created for each major release.
 
 \subsection{Resolving Problems}
 
-In case problems are found during the validation, a DM issue needs to be opened in Jira.
+In case problems are found during the validation, a DM issue needs to be created in Jira.
 This issue shall follow the usual development process as described in the developer guide.
 The fix will be first implemented in a ticket branch, reviewed and merged to master.
 Once the fix has been proved to work, it can be backported to the release branch.
-Backporting mechanism has to be documented in the developer guide, however it is here summarized:
+Backporting mechanism summarized as follows \footnote{THis needs to be documented in teh DevGuide}:
 
+
+{\colr{red} This needs a re write}
 \begin{itemize}
-\item given an issue DM-XXX fixed on a ticket branch \textit{tickets/DM-XXX} and merged to master (the ticket branch shall not be deleted in this case, until the backporting is concluded)
+\item If we have an issue DM-XXX fixed on a ticket branch \textit{tickets/DM-XXX} and merged to master
+the ticket branch must not be deleted  until the backporting is concluded.
+\item Create a  backporting ticket DM-YYY  and a corresponding ticket branch based on DM-XXX issue
 \item given a release branch created based on a release candidate, or on a weekly tag
-\item a specific backporting ticket DM-YYY has to be created, and a corresponding ticket branch based on DM-XXX issue
 \item backport is done from the backporting ticket branch, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} .
 \begin{itemize}
 \item Note that this will rebase the backporting branch to the release branch.
