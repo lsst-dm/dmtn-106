@@ -34,7 +34,7 @@ Software products \textit{live} in a software repository. The LSST software repo
 \subsection{Dependencies} \label{sec:dependencies}
 
 
-A package may only depend on other packages. Third party dependencies are either packages or in the conda environment.
+A package may only depend on other packages. Third party dependencies are either packages or part of the conda environment.
 
 The dependency information is provided in each git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
 These files , and hence the dependencies,  are considered part of the source code and controlled  and versioned in the same manner.
@@ -44,21 +44,21 @@ These files , and hence the dependencies,  are considered part of the source cod
 
 A software release is  a consciously identified version of a  software product
 documented with a software release note.
-The identifier is usually of the form NN.m (see \secref{sec:versioning}): and is used also as a  tag in the SW repository.
-The tag is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
+The identifier is usually of the form M.n ( M.n.p in case of semantic versioning, see \secref{sec:versioning}): and is used also as a tag in the SW repository.
+%The tag is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
 
-The tag in the Github repository and the software release note should be sufficient for a developer
+The tag in the Github repository and the software release note should be sufficient to identify the release, and therefore for a developer
 to build the binaries and execute the software.
 
 
 
-\subsection{Binary Package} \label{sec:swbpkg}
+\subsection{Binary Packages} \label{sec:swbpkg}
 
 A binary package is a package containing executable binaries for the corresponding release.
 It is created by building the SW provided in the release tag.
 Binary packages can be created to support multiple platforms (such as Linux, OSX, windows) if required.
 
-Binaries in general should be generated only once, and made available for their use by dependent software or for deployment.
+Binaries should be generated only once, and made available for their use by dependent software or for deployment.
 
 The majority of DM software is using EUPS for binary packaging. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
 Software products implemented in java are using jar/war binary packaging.
@@ -74,7 +74,7 @@ A distribution can be used for different purposes:
 \begin{itemize}
 \item to make available software releases for operations or commissioning
 \item to test (integration, validation, operation rehearsals) software releases
-\item to provide software releases to external collaborators.
+\item to provide software releases to external collaborators. In this case source code can be distributed instead of binaries.
 \end{itemize}
 
 The main DM software product currently being distributed is the Science Pipeline Stack -
@@ -88,6 +88,18 @@ The versioning schema will have 3 digits separated by a "." . For example :
 \\
 $16.0.0$
 
+Generalizing, the versioning scheme is the following:
+
+$M.n.p$
+
+where 
+
+\begin{itemize}
+\item {\bf M} is the major version identifier,
+\item {\bf n} is the minor version identifier,
+\item {\bf p} is the patch level identifier
+\end{itemize}
+
 The repository at this stage would be tagged $16.0.0$ .
 One should note in this scheme there are no padding zeros thus:
 \\
@@ -99,8 +111,7 @@ $17.0$
 The first number is the major version and the the second number is the minor version.
 
 
-
-\subsubsection{Branch Naming}
+\subsubsection{Branch Naming} \label{sec:branchnaming}
 
 In order to clearly distinguish release branches from tags and other branches, the following naming scheme is suggested:
 
@@ -108,17 +119,18 @@ In order to clearly distinguish release branches from tags and other branches, t
 b.<M>.<n>.x
 \end{verbatim}
 
-where {\bf M} is the major version and {\bf m} is the minor version.
+where {\bf M} is the major version and {\bf n} is the minor version starting from 0.
 
-The letters {\bf b} and {\bf x} indicate that this is a branch.
+The letter  {\bf b} indicates that this is a branch.
+The letter {\bf x} is in reality a place older. This indicates that versions in a specific branch will have a fixed {\bf M.n} but different patch level, starting from 0.
 
 \newpage
 \section{Change control} \label{sec:changecontrol}
 
-The DMCCB is in charge of approving the changes which go in  all releases (major, minori, or patch).
-The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones.
+The DMCCB is in charge of approving the changes which go in  all releases (major, minor, or patch).
+The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones \footnote{The DM Release Plan is in the process to be updated, see \jira{DM-17001}}.
 
-Changes to the release plan  thus are  at least partially controlled the LSST chancge cotrol  process as  milesotnes are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
+Changes to the release plan  thus are  at least partially controlled the LSST change control  process as  milestones are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
 
 Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
 The issue should specify what needs to be fixed in the release and why, it shall specify DM issues that are requested to be included in the patch.
@@ -132,9 +144,10 @@ The release is identified in Jira using a release issue.
 
 All issues to be included in a release shall be added as blocking to the release issue.
 
-We should start to  use the field \textit{Fix in Version(s)} which is standard in Jira
-but requires changes in the DM Jira project.
-
+Note that by introducing the field \textit{Fix in Version(s)}, will permit having the same information in a much simpler way.
+Both release issue and \textit{Fix in Version(s)} fields can be used in parallel.
+Once the release is done, it will also be possible to complete the field \textit{Fix in Version(s)} with the exact release,
+ensuring in this way that each issue is fully documented and self consistent\footnote{process to be automated}.
 
 \newpage
 \section{Release Note} \label{sec:relnote}
@@ -144,13 +157,11 @@ The release note documents the content of a release.
 The following information should be  provided:
 \begin{itemize}
 \item Installation instructions. This is usually a manually written set of instructions.
-\item Narrative section describing the content of the release, this summary should be written by an person not auto generated.
+\item Narrative section describing the content of the release, this summary should be written by a person not auto generated.
 The T/CAM is responsible for making sure this is provided.
 \item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted while other issues will  listed to be comprehensive.
 \item Technical information like the GitHub tag, dependencies,  etc. can be extracted automatically from Github or other tools.
 \end{itemize}
-
-Once the field \textit{Fix in Version(s)} has been introduced in the Jira DM project, it shall be made consistent with the release note. This process should be automated.
 
 
 \newpage
@@ -174,9 +185,9 @@ Each time a change is merged into master, the following activities should be per
 At the moment, continuous integration is done on a ticket branch prior to merging changes to master. Binary packages (EUPS) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
 
 
-\subsection{Daily and Weekly builds} \label{sec:weekly}
+\subsection{Nightly and Weekly builds} \label{sec:weekly}
 
-Daily and weekly builds are  useful for a number of reasons such as :
+Nightly and weekly builds are  useful for a number of reasons such as :
 \begin{itemize}
 	\item Maintaining a healthy code base.
 	\item Forcing us to maintains build scripts.
@@ -185,10 +196,10 @@ Daily and weekly builds are  useful for a number of reasons such as :
 	\item A starting point for a release.
 \end{itemize}
 
-Daily builds do not generate a tag in the Github repositories.
+Nightly builds do not generate tags in the Github repositories.
 When a weekly build is done, a corresponding tag in the Github repository is created.
 Though weekly builds are considered releases in Github, from a DM release management point of view they are not
-releases - they are release candidate starting points.
+releases - they are reference builds and, when they meet the criteria in \ref{sec:firstrc}, release candidate starting points.
 
 
 \subsection{Announcement} \label{sec:anaouncement}
@@ -207,54 +218,62 @@ The first release candidate on a release is created when:
 \begin{itemize}
 \item all issues that are supposed to be included in it have been implemented and merged into master.
 \item a weekly build has been completed successfully.
-\item the product owner confirms that the weekly is good to go. \footnote{This is not a full test, but just ensure that there are no regressions nor problems at a first glance. Complete tests will be done on the release candidates.}
+\item the product owner confirms that the weekly is good to go. \footnote{This is not a full test, but just ensures that there are no regressions nor problems at a first glance.}
 \end{itemize}
 
 In case a weekly is presenting problems that may affect the release, the DMCCB will decide if delay the release start or kick--off the process and fix the problems in forthcoming release candidates.
 
-The creation of the first release candidate is done using the Jenkins job:
 
+Following steps have to be used to create the first release candidate:
+
+\begin{itemize}
+\item creating a release candidate in GitHub (Codekit\footnote{Code management toolkit \url{https://github.com/lsst-sqre/sqre-codekit}})
+\item execute a build (using Jenkins job run-rebuild)
+\item create and publish the packages. For the science pipelines, Eups packages are created and published in the package repository:
+   \begin{itemize}
+   \item source packages (using run-publish Jenkins job)
+   \item binaries packages (using tarball Jenkins job)
+   \end{itemize}
+\item creating the distribution package. Still for the science pipelines, a docker image is generate and made available in the docker repository:
+   \begin{itemize}
+   \item distribution generated and published using build-stack Jenkins job
+   \end{itemize}
+\end{itemize}
+
+
+This procedure can be applied for all software products.
+
+The parameters required are:
+\begin{itemize}
+\item GIT\_REFs: the existing git references, for example "w.2018.52". This is the stable weekly build identified.
+\item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc1"
+\end{itemize}
+
+For the science pipelines, the above steps are collected in one single Jenkins job:
+ 
 \begin{verbatim}
 releases/official-release
 \end{verbatim}
 
-with the following parameters:
-
-\begin{itemize}
-\item {\bf SORUCE\_GIT\_REFS}: <weekly tag> (for example \textit{w.2018.52})
-\item {\bf RELEASE\_GIT\_TAG}: <Release Candidate> (for example \textit{v.17.0.rc1})
-\item {\bf O\_LATEST}: false
-\end{itemize}
-
-
-If the Jenkins job is not available, the release candidate should be created manually:
-
-\begin{itemize}
-\item creating the release branch from the last weekly build (codekit, functionality still to be added, branches can be created manually)
-\item creating a release candidate (codekit)
-\item creating the binaries packages
-\item creating the distribution package
-\end{itemize}
-
-As of today, the majority of these steps are integrated in Jenkins jobs. This makes it impossible to complete the release process without the use of the continuous integration system.
+Note that for all software product using Eups, like for example the science pipelines, release candidates need to start with a $v$.
 
 \subsection{Other Related Artifacts}
 
 Together with the creation of the release candidate, other artifacts may need to be branched, and possibly have a first release candidate also:
 
 \begin{itemize}
-\item Documentation: release note are usually part of a documentation endpoint, similar to pipelines.lsst.io (for science pipelines). In order to consolidate all information relevant for the new release, a corresponding branch need to be created.
-\item Environments  as needed :
-	\begin{itemize}
-	\item   Conda environment definition.
-	\item  Envronment packageis like \textit{lsst}  where \textit{newinstal.sh} is developed for pipelines.
-	\end{itemize}
+\item Documentation: to consolidate all information relevant for the new release. This includes the release note. 
+As an example, for science pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
+\item  Environment definition packages, like for example packages containing conda environment files (yaml).
+\item  Distribution packages; still referring to the science pipelines, the package {\bf lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
+\item Test data packages.
+\item Other packages not tagged automatically, but required to be inline with the released software.
 \end{itemize}
 
 
 \subsection{Release Candidates Validation} \label{sec:rcvalidation}
 
-The release candidate needs to be validateid.
+The release candidate needs to be validated.
 
 In an ideal case, a test campaign following a specific test plan should be conducted, demonstrating that the release candidate, and therefore the forthcoming release, is behaving as required and expected.
 
@@ -278,54 +297,73 @@ In case problems are found during the validation, a DM issue needs to be created
 This issue shall follow the usual development process as described in the developer guide.
 The fix will be first implemented in a ticket branch, reviewed and merged to master.
 Once the fix has been proved to work, it can be backported to the release branch.
-Backporting mechanism summarized as follows \footnote{THis needs to be documented in teh DevGuide}:
+
+The release branch will be created only for the packages to be fixed, and will follow the naming convention described in \ref{sec:branchnaming}.
+
+%Given a fix to backport, documented in DM-XXX Jira issue, and given a release branch bM.n.x,
+Backporting mechanism can be summarized as follows \footnote{This needs to be documented in the DevGuide}:
 
 
-{\color{red} This needs a re write}
 \begin{itemize}
-\item If we have an issue DM-XXX fixed on a ticket branch \textit{tickets/DM-XXX} and merged to master
-the ticket branch must not be deleted  until the backporting is concluded.
-\item Create a  backporting ticket DM-YYY  and a corresponding ticket branch based on DM-XXX issue
-\item given a release branch created based on a release candidate, or on a weekly tag
-\item backport is done from the backporting ticket branch, using the following command: \begin{verbatim}git rebase --onto <RELEASE_BRANCH>\end{verbatim} .
-\begin{itemize}
-\item Note that this will rebase the backporting branch to the release branch.
-\end{itemize}
-\item open a PR from the ported ticket branch to merge into the release branch
-\item merge the ported branch into the release branch when the PR is approved
-\item remove the ported branch and the original branch
+\item Create the backporting Jira issue DM-XYZ with subject \textit{Backport issue DM-XXX on release branch bM.n.x}
+  \begin{itemize}
+  \item DM-XXX Jira issue has to be already in status reviewed or done, and the corresponding ticket branch already merged to master. 
+  \item The ticket branch must not be deleted  until the backporting is concluded.
+  \end{itemize}
+\item Create the backporting ticket branch \textit{tickets/DM-XYZ}  based on DM-XXX ticket branch
+\item Backport the fix from master to the release branch using the following command: 
+  \begin{itemize}
+   \item $git rebase --onto bM.n.x$.
+  \end{itemize}
+\item Open a PR from the backported ticket branch to merge into the release branch
+\item Merge the backported branch into the release branch when the PR is approved
+\item Remove the backported ticket branch and the original ticket branch
 \end{itemize}
 
 Note that porting mechanism is a development activity, under the responsibility of the development team, and therefore needs to be documented in the developer guide and removed from this document.
 
 In a special case, that an issue cannot be fixed on master, the ticket branch can be opened based on the release branch.
 
-The porting can be applied also in case that an issue, implemented on master after the release branch has been cut, has to be included in the release.
+The porting can be applied also in case that an issue, implemented on master after the the first release candidate has been created, has to be included in the release.
 
 The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources or delay in the final release availability.
 
 
 \subsection{Additional Release Candidates} \label{sec:newrc}
 
-Once one or more issues have been fixed on the release branch, a new release candidate has to be generated using the Jenkins job \textit{official-release} using following parameters:
+Once one or more issues have been fixed on the release branch, a new release candidate has to be generated. %the Jenkins job \textit{official-release} using following parameters:
+The same steps used for generating the first release candidate, need to be used also in this case, with different parameters:
 
 \begin{itemize}
-\item {\bf SOURCE\_GIT\_REFS}: <BranchId> <Previous RC>. (for example \textit{b.17.0 v17.0.rc1})
-\item {\bf RELEASE\_GIT\_TAG}: <new RC> (for example \textit{v17.0.rc2})
-\item {\bf O\_LATEST}: false
+\item GIT\_REFs: the starting git references, for example "bM.n.x M.n.p.rc1". Where available the release branch will be used instead of the previous release candidate
+\item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc2"
 \end{itemize}
+
+Further release candidates can be created just repeating the process with the appropriate parameters.
+The release candidate 3 will require following parameters:
+
+\begin{itemize}
+\item GIT\_REFs: the starting git references, for example "bM.n.x M.n.rc2". Where available the release branch will be used instead of the previous release candidate
+\item GIT\_TAG: the release candidate to be generated, for example "M.n.rc3"
+\end{itemize}
+
+Generalizing, a release candidate N will be based on the release branch and the previous release candidate N-1.
+ 
 
 \subsection{Final Release} \label{sec:finalrelease}
 
-Once a final release candidate has been identified, the final release can be created.
+Once a final release candidate {\bf Nf} has been identified, the final release can be created.
 
-This has to be done using the Jenkins job \textit{official-release} as previously done for the release candidates, with the following parameters:
+To create the final release, just repeat the same steps used to created the release candidates, using following parameters:
 
 \begin{itemize}
-\item {\bf SOURCE\_GIT\_REFS}: <Final RC>. (for example \textit{v17.0.rc2})
-\item {\bf RELEASE\_GIT\_TAG}: <Release Tag> (for example \textit{17.0})
-\item {\bf O\_LATEST}: true
+\item GIT\_REFs: "M.n.p.rcNf"
+\item GIT\_TAG: "M.n.p"
 \end{itemize}
+
+Note that the final release is from a point of view of content identical to the last release candidate.
+
+Final tags need to be done manually for all the additional documentation, environments and other packages.
 
 \newpage
 
@@ -334,7 +372,7 @@ This has to be done using the Jenkins job \textit{official-release} as previousl
 In the case that the DMCCB approves a proposed patch release, the process shall be:
 
 \begin{itemize}
-\item create the release branches from the available release tags on the Github packages impacted by the fixes
+\item create the release branches from the available release tags on the Github packages impacted by the fixes (if they don't exist)
 \item backport the requested issues
 \item create a release candidate, for example \textit{v17.0.1.rc1} using the the same approach explained above (\ref{sec:newrc})
 \item validate the release candidate
