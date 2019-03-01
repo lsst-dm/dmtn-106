@@ -1,0 +1,123 @@
+\section{Status and Problems} \label{sec:statusAndProblems}
+
+\subsection{Status of the implementation} \label{sec:status}
+
+At the time this technote is in writing, March 2019, only \textbf{lsst\_distrib} package is released and distributed.
+
+
+\subsubsection{Packaging System} \label{sec:statusPkgs}
+
+Following technologies are used for packaging:
+
+\begin{itemize}
+\item {\bf Eups}: for the majority of DM packages. This included third party libraries that require customization, or that are not available in the conda channels. The lsst DM binary Eups repository is hosted at \url{https://eups.lsst.codes/}. 
+\item {\bf Sonatype Nexus}: for java based DM software developed packages
+\item {\bf Conda}: for packages public available, that can be used without any customization
+\item {\bf Pip/PiPy}: for python packages public available. In some cases for packages pip/PiPy is used for DM developed python packages, for example \textit{docsteady}.
+\end{itemize}
+
+
+\subsubsection{Distribution System} \label{sec:statusDistrib}
+
+The main tool used for distribution is \textbf{Docker}. 
+
+In \url{pipelines.lsst.io} instructions are provided on how to deploy a science pipelines docker image.
+
+A second distribution approach is also provided, using the script \textit{newinstall.sh}. 
+This scripts permits to retrieve a specific science pipelines build or release available in the Eups repository, and setup the environment for its build and ewxecution.
+
+
+\subsubsection{SW Products Identification} \label{sec:statusIdentification}
+
+The software products are developed using multiple GitHub packages. 
+A GitHub metapackage, for example \textit{lsst\_distrib} for science pipelines, is identifying the software product. 
+All git packages of a software product are dependencies in that metapackage, direct or indirect.
+
+GitHub teams are used to differentiate between two types of git packages:
+
+\begin{itemize}
+\item \textbf{Data Management} team: it includes all dependencies of \textit{lsst\_distrib}
+\item \textbf{DM Externals} team: for packages used to build and distribute \textit{lsst\_distrib} but that they are not part of it.
+\end{itemize}
+
+There is a third team, \textbf{DM Auxiliary}, that identifies auxiliary packages to be tagged, but that they are not part of the software product, nor distributed with it.
+
+Note that in reality, \textit{lsst\_distrib} does not correspond to a software product, but to a distribution product.
+It includes not only the different pipelines, but also test data and build tools.
+
+
+\subsubsection{Environment} \label{sec:statusEnvs}
+
+The conda environment to be used for building the science pipelines is defined in the Git package \textit{scipipe\_conda\_env}.
+No releases nor tags are made  on the conda environment git package.
+
+\textit{TO BE CLARIFIED: how are java build environments managed?}
+
+
+\subsubsection{Build Tools} \label{sec:statusTools}
+
+The build tools used to build science pipelines software are available in \textit{lsstsw} and \textit{lsst\_build} git packages.
+
+The Jenkins scripts also are an important part of the tooling, facilitating a large quantity of actions, like, test a ticket branch, automate releases, or provide periodic build (weekly/daily).
+
+The tools picture is completed by \textit{codekit}, which permits interaction with multiple GitHub packages.
+Just as an example, it is used to create the same tag on all the GitHub packages composing a defined product automatically, instead of creating it manually.
+
+\textit{TO BE CLARIFIED: which are java build tools?}
+
+
+\subsection{Open Problems} \label{sec:openProblems}
+
+\subsubsection{SW Product Composition} \label{sec:problemId}
+
+A GitHub package may be included in more than one software product.
+
+This make impossible to apply in a consistent way the release procedure to a SW products that is not the science pipelines.
+The reason is explained in the following example.
+
+Product A is composed by 100 Git packages.
+
+Product B is composed by 80 Git packages.
+
+70 Git packages are shared by both products.
+
+When release 1.0 is done on product A, all 100 packages will be tagged, and corresponding Eups packages are created. This will include the 70 shared packages.
+
+One week lather, product B is ready for the release 1.0, and some of the 70 shared packages have been updated.% in order to be ready for the forthcoming 1.0 product B release.
+For them, the 1.0 tag required for product B release, will not be the same as the 1.0 tag required for the product A release.
+This implies that for some packages, release 1.0 of product A, is different from release 1.0 of product B.
+
+Requirement: there shall be a 1 to 1 correspondence between software products and GitHub packaged. If this is not possible, each GitHub package shall be included in only one software product.
+Note also that, each GitHub package used for building, unit testing and packaging the software Products shall not be included in the SW product itself, but versioned separately and be part of the environment definition.
+
+
+\subsubsection{Code Fragmentation} \label{sec:problemCode}
+
+The high number of packages causes problems in that it :
+
+\begin{itemize}
+\item increases the build time: each Git package needs to be build each time.
+\item increases the release time: all Git packages need to be released each time.
+\item increases the failure probability: the tooling may be affected by network glitch or similar technical issues. This may lead to the failure of the build/release process in a non deterministic way.
+\end{itemize}
+
+Moving 3rd party libraries to conda environment, will reduce this problem. 
+However this requires proper management of the conda environment.
+
+Requirement: conda environment shall be managed properly (activity already started).
+
+Requirement: the number of Git packages shall be kept low. DM-CCB shall approve each time a new package is introduced, since this has an impact on the maintainability of the system.
+
+
+\subsubsection{Binaries Persistence} \label{sec:problemPersistence}
+
+Each time we do a build, all git packages and rebuild. However, if the package is already installed in the local environment and is not affected by any changes, it will not be rebuild.
+
+In reality, once a package has been built, and the corresponding binaries have been made available, for a specific platform (linux, osx, etc), in the package repository (\url{https://eups.lsst.codes/}),
+it shall be possible for all the downstream users, to use it without building it again.
+
+A GitHub package should be rebuild, only in case its source code has changed, or one of its dependencies has changed (in case of semantic versioning, only for breaking changes that increase the major version).
+
+Requirement: It shall be possible to resolve the package binaries from \url{https://eups.lsst.codes/} if available, instead of building them from the source code.
+
+
