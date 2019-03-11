@@ -1,9 +1,11 @@
 \section{Introduction} \label{sec:intro}
 
-The scope of this document is to provide a release procedure valid for all software products in the LSST Data Management subsystem. The procedure can of course be tailored according to specific software product needs.
+The release procedure documented in this document should be general and valid for all software products in the LSST Data Management subsystem.
+It is an abstraction of SQR-016, but it is supposed that the Jenkins builds used for the science pipelines can be applied in the same way to other Software Products.
 
-This document is an abstraction of SQR-016 and it is intended to be independent from the technology we are using. 
-Specific tools used at the moment are mentioned, but this procedure shall not be constrained to them.
+The release engineer should be in charge of the release activities documented here. All developers are not affected, except for backporting of fixes into release branches.
+
+Section \ref{sec:statusAndProblems} summarizes the actual development process, and reports the derived problems that affect the release process.
 
 
 \subsection{Applicable Documents}
@@ -20,22 +22,57 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-This document uses certain terms which are often overloaded -  in this section we define these terms  as intended in this document.
+This document uses certain terms which are often overloaded. In this section we define these terms  as intended in this document.
+
+
+\subsubsection{Environment} \label{sec:envdef}
+
+An environment is a set of libraries, executables and configurations, that are predefined for a specific context or function.
+
+An environment is usually needed in the following contexts:
+
+\begin{itemize}
+\item software development: the environment includes all libraries and tools required to build and debug a software product
+\item software test and verification: the environment includes, on top of build and debug tools, additional tools to permit/facilitate the testing and validation activities.
+\item operations: the environment shall include only tools required for the execution of operational product. It shall not contain any build or debug tool. It shall be optimize for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
+\end{itemize}
+
+These are the most common uses of an environment. Additional scenarios can be identified depending on the needs.
+
+In some cases, for simplicity, the same environment is used in development, tests and operations, but this does not justify the inclusion of the environment definition in the Software Product itself.
 
 
 \subsection{Software Product} \label{sec:swprod}
 
 A Software Product is a component of the subsystem (DM) product tree.
-Releases are made of  SW products (\secref{sec:swrel}).
 
-A SW Product should correspond to a single repository (git package).
-Where a SW Product is comprised of multiple git packages
-a Github \textit{metapackage} is used to identify the SW Product.
-All git packages of the SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
+The following activities are done on a SW Product:
+\begin{itemize}
+\item development activities
+\item test activities, usually unit tests and system test
+\item release activities
+\item packaging activities
+\item operational activities, in stand alone mode, in an operational pipeline or as part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other Software Products.
+\end{itemize}
 
-Note that git packages used to build the software product, should not be part of it.
+A Software Product shall correspond to a single repository (git package). All its dependences are also a Software Product and therefore released separately. However, this is not the case for DM.
 
-Software products \textit{live} in a software repository. The LSST software repository is Github\footnote{\url{https://github.com/lsst}}.
+In DM, where a Software Product is comprised of multiple git packages, a GitHub \textit{metapackage} is used to identify the Software Product.
+All git packages composing the Software Product are dependencies in a GitHub \textit{metapackage} and released at the same time.
+In this case, a git package shall be related only to one Software Product, and it is not by himself a Software Product.
+
+The following elements should not be part of a Software Product:
+
+\begin{itemize}
+\item build tools, otherwise we will have build tools deployed in operations.
+\item environment definition, since the environment depends on the final instantiation of the Software Product that are not visible in the development phase.
+\end{itemize}
+
+These elements shall follow a parallel development / release process.
+
+Test data should also not be included in a Software Product. However including small datasets for enabling the unit tests is not a bad practice.
+
+The content of this subsection is a \textit{prerequisite} for any release procedure to be applied.
 
 
 \subsection{Dependencies} \label{sec:dependencies}
@@ -63,7 +100,7 @@ A binary package is a package containing executable binaries for the correspondi
 It is created by building the SW provided in the release tag.
 Binary packages can be created to support multiple platforms (such as Linux, OSX, windows) if required.
 
-In some cases, these packages do not contains compiled binaries, but executable scripts or just text files.
+In some cases, these packages do not contain compiled binaries, but executable scripts or just text files.
 
 Binaries should be generated only once, and made available for their use by dependent software or for deployment.
 
@@ -84,13 +121,12 @@ A distribution can be used for different purposes:
 \item to provide software releases to external collaborators. In this case source code can be distributed instead of binaries.
 \end{itemize}
 
-Distributions may also include non binary packages or source code, depending on the need.
+Distributions may also include non binary packages or source code, as needed.
 
 The main DM software product currently being distributed is the Science Pipeline Stack -
 this may be used in a few ways see \url{https://pipelines.lsst.io/install/index.html}
 
 
-\newpage
 \subsection{Versioning and Naming} \label{sec:versioning}
 DM will  switch to Semantic Versioning \footnote{\url{https://semver.org/spec/v2.0.0.html}},  this will help improve dependency management, and make  managing patch releases more comprehensible.
 The versioning schema will have 3 digits separated by a "." . For example :
@@ -159,8 +195,8 @@ Both release issue and \textit{Fix in Version(s)} fields can be used in parallel
 Once the release is done, it will also be possible to complete the field \textit{Fix in Version(s)} with the exact release,
 ensuring in this way that each issue is fully documented and self consistent\footnote{process to be automated}.
 
-\newpage
-\section{Release Note} \label{sec:relnote}
+
+\subsection{Release Note} \label{sec:relnote}
 
 The release note documents the content of a release.
 
