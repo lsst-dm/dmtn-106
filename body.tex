@@ -1,6 +1,12 @@
 \section{Introduction} \label{sec:intro}
 
-The scope of this document is to provide a release procedure valid for all software products in the LSST Data Management subsystem. The procedure  can of course be tailored according to specific software product needs.
+The release procedure documented in this document should be general and valid for all software products in the LSST Data Management subsystem.
+It is an abstraction of SQR-016, but it is supposed that the Jenkins builds used for the science pipelines can be applied in the same way to other Software Products.
+
+The release engineer should be in charge of the release activities documented here. All developers are not affected, except for backporting of fixes into release branches.
+
+Section \ref{sec:statusAndProblems} summarizes the actual development process, and reports the derived problems that affect the release process.
+
 
 \subsection{Applicable Documents}
 
@@ -16,23 +22,60 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-This document uses certain terms which are often overloaded -  in this section we define these terms  as intended in this document.
+This document uses certain terms which are often overloaded. In this section we define these terms  as intended in this document.
+
+
+\subsubsection{Environment} \label{sec:envdef}
+
+An environment is a set of libraries, executables and configurations, that are predefined for a specific context or function.
+
+An environment is usually needed in the following contexts:
+
+\begin{itemize}
+\item software development: the environment includes all libraries and tools required to build and debug a software product
+\item software test and verification: the environment includes, on top of build and debug tools, additional tools to permit/facilitate the testing and validation activities.
+\item operations: the environment shall include only tools required for the execution of operational product. It shall not contain any build or debug tool. It shall be optimize for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
+\end{itemize}
+
+These are the most common uses of an environment. Additional scenarios can be identified depending on the needs.
+
+In some cases, for simplicity, the same environment is used in development, tests and operations, but this does not justify the inclusion of the environment definition in the Software Product itself.
 
 
 \subsection{Software Product} \label{sec:swprod}
 
 A Software Product is a component of the subsystem (DM) product tree.
-Releases are made of  SW products (\secref{sec:swrel}).
 
-A SW Product should correspond to a single repository (git package).
-Where a SW Product is comprised of multiple git packages
-a Github \textit{metapackage} is used to identify the SW Product.
-All git packages of the SW product will be dependencies in a Github \textit{metapackage} and released at the same time.
+The following activities are done on a SW Product:
+\begin{itemize}
+\item development activities
+\item test activities, usually unit tests and system test
+\item release activities
+\item packaging activities
+\item operational activities, in stand alone mode, in an operational pipeline or as part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other Software Products.
+\end{itemize}
 
-Software products \textit{live} in a software repository. The LSST software repository is Github\footnote{\url{https://github.com/lsst}}.
+A Software Product shall correspond to a single repository (git package). All its dependences are also a Software Product and therefore released separately. However, this is not the case for DM.
+
+In DM, where a Software Product is comprised of multiple git packages, a GitHub \textit{metapackage} is used to identify the Software Product.
+All git packages composing the Software Product are dependencies in a GitHub \textit{metapackage} and released at the same time.
+In this case, a git package shall be related only to one Software Product, and it is not by himself a Software Product.
+
+The following elements should not be part of a Software Product:
+
+\begin{itemize}
+\item build tools, otherwise we will have build tools deployed in operations.
+\item environment definition, since the environment depends on the final instantiation of the Software Product that are not visible in the development phase.
+\end{itemize}
+
+These elements shall follow a parallel development / release process.
+
+Test data should also not be included in a Software Product. However including small datasets for enabling the unit tests is not a bad practice.
+
+The content of this subsection is a \textit{prerequisite} for any release procedure to be applied.
+
 
 \subsection{Dependencies} \label{sec:dependencies}
-
 
 A package may only depend on other packages. Third party dependencies are either packages or part of the conda environment.
 
@@ -48,8 +91,7 @@ The identifier is usually of the form M.n ( M.n.p in case of semantic versioning
 %The tag is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
 
 The tag in the Github repository and the software release note should be sufficient to identify the release, and therefore for a developer
-to build the binaries and execute the software.
-
+to resolve the dependencies, build the binaries and execute the software.
 
 
 \subsection{Binary Packages} \label{sec:swbpkg}
@@ -57,6 +99,8 @@ to build the binaries and execute the software.
 A binary package is a package containing executable binaries for the corresponding release.
 It is created by building the SW provided in the release tag.
 Binary packages can be created to support multiple platforms (such as Linux, OSX, windows) if required.
+
+In some cases, these packages do not contain compiled binaries, but executable scripts or just text files.
 
 Binaries should be generated only once, and made available for their use by dependent software or for deployment.
 
@@ -77,11 +121,12 @@ A distribution can be used for different purposes:
 \item to provide software releases to external collaborators. In this case source code can be distributed instead of binaries.
 \end{itemize}
 
+Distributions may also include non binary packages or source code, as needed.
+
 The main DM software product currently being distributed is the Science Pipeline Stack -
 this may be used in a few ways see \url{https://pipelines.lsst.io/install/index.html}
 
 
-\newpage
 \subsection{Versioning and Naming} \label{sec:versioning}
 DM will  switch to Semantic Versioning \footnote{\url{https://semver.org/spec/v2.0.0.html}},  this will help improve dependency management, and make  managing patch releases more comprehensible.
 The versioning schema will have 3 digits separated by a "." . For example :
@@ -95,9 +140,9 @@ $M.n.p$
 where 
 
 \begin{itemize}
-\item {\bf M} is the major version identifier,
-\item {\bf n} is the minor version identifier,
-\item {\bf p} is the patch level identifier
+\item \textbf{M} is the major version identifier,
+\item \textbf{n} is the minor version identifier,
+\item \textbf{p} is the patch level identifier
 \end{itemize}
 
 The repository at this stage would be tagged $16.0.0$ .
@@ -119,10 +164,11 @@ In order to clearly distinguish release branches from tags and other branches, t
 b.<M>.<n>.x
 \end{verbatim}
 
-where {\bf M} is the major version and {\bf n} is the minor version starting from 0.
+where \textbf{M} is the major version and \textbf{n} is the minor version starting from 0.
 
-The letter  {\bf b} indicates that this is a branch.
-The letter {\bf x} is in reality a place older. This indicates that versions in a specific branch will have a fixed {\bf M.n} but different patch level, starting from 0.
+The letter  \textbf{b} indicates that this is a branch.
+The letter \textbf{x} is a placeholder. It indicates that versions in a specific branch will have a fixed \textbf{M.n} but different patch level, where \textbf{0} means no patch.
+
 
 \newpage
 \section{Change control} \label{sec:changecontrol}
@@ -149,8 +195,8 @@ Both release issue and \textit{Fix in Version(s)} fields can be used in parallel
 Once the release is done, it will also be possible to complete the field \textit{Fix in Version(s)} with the exact release,
 ensuring in this way that each issue is fully documented and self consistent\footnote{process to be automated}.
 
-\newpage
-\section{Release Note} \label{sec:relnote}
+
+\subsection{Release Note} \label{sec:relnote}
 
 The release note documents the content of a release.
 
@@ -198,7 +244,7 @@ Nightly and weekly builds are  useful for a number of reasons such as :
 
 Nightly builds do not generate tags in the Github repositories.
 When a weekly build is done, a corresponding tag in the Github repository is created.
-Though weekly builds are considered releases in Github, from a DM release management point of view they are not
+Though weekly builds are considered releases in Github, from a release management point of view they are not
 releases - they are reference builds and, when they meet the criteria in \ref{sec:firstrc}, release candidate starting points.
 
 
@@ -227,21 +273,21 @@ In case a weekly is presenting problems that may affect the release, the DMCCB w
 Following steps have to be used to create the first release candidate:
 
 \begin{itemize}
-\item creating a release candidate in GitHub (Codekit\footnote{Code management toolkit \url{https://github.com/lsst-sqre/sqre-codekit}})
+\item create a release candidate in GitHub (Codekit\footnote{Code management toolkit \url{https://github.com/lsst-sqre/sqre-codekit}})
 \item execute a build (using Jenkins job run-rebuild)
 \item create and publish the packages. For the science pipelines, Eups packages are created and published in the package repository:
    \begin{itemize}
    \item source packages (using run-publish Jenkins job)
    \item binaries packages (using tarball Jenkins job)
    \end{itemize}
-\item creating the distribution package. Still for the science pipelines, a docker image is generate and made available in the docker repository:
+\item create the distribution package. Still for the science pipelines, a docker image is generate and made available in the docker repository:
    \begin{itemize}
    \item distribution generated and published using build-stack Jenkins job
    \end{itemize}
 \end{itemize}
 
 
-This procedure can be applied for all software products.
+This procedure should be applied for all software products in the DM product tree.
 
 The parameters required are:
 \begin{itemize}
@@ -265,7 +311,7 @@ Together with the creation of the release candidate, other artifacts may need to
 \item Documentation: to consolidate all information relevant for the new release. This includes the release note. 
 As an example, for science pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
 \item  Environment definition packages, like for example packages containing conda environment files (yaml).
-\item  Distribution packages; still referring to the science pipelines, the package {\bf lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
+\item  Distribution packages; still referring to the science pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
 \item Test data packages.
 \item Other packages not tagged automatically, but required to be inline with the released software.
 \end{itemize}
@@ -321,12 +367,13 @@ Backporting mechanism can be summarized as follows \footnote{This needs to be do
 \end{itemize}
 
 Note that porting mechanism is a development activity, under the responsibility of the development team, and therefore needs to be documented in the developer guide and removed from this document.
+This backporting procedure is just an example. Additional backporting mechanism can be proposed.
 
 In a special case, that an issue cannot be fixed on master, the ticket branch can be opened based on the release branch.
 
 The porting can be applied also in case that an issue, implemented on master after the the first release candidate has been created, has to be included in the release.
 
-The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources or delay in the final release availability.
+The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources and/or delay in the final release availability.
 
 
 \subsection{Additional Release Candidates} \label{sec:newrc}
@@ -352,7 +399,7 @@ Generalizing, a release candidate N will be based on the release branch and the 
 
 \subsection{Final Release} \label{sec:finalrelease}
 
-Once a final release candidate {\bf Nf} has been identified, the final release can be created.
+Once a final release candidate \textbf{Nf} has been identified, the final release can be created.
 
 To create the final release, just repeat the same steps used to created the release candidates, using following parameters:
 
@@ -374,9 +421,9 @@ In the case that the DMCCB approves a proposed patch release, the process shall 
 \begin{itemize}
 \item create the release branches from the available release tags on the Github packages impacted by the fixes (if they don't exist)
 \item backport the requested issues
-\item create a release candidate, for example \textit{v17.0.1.rc1} using the the same approach explained above (\ref{sec:newrc})
+\item create a release candidate, for example \textit{M.n.1.rc1} using the the same approach explained above (\ref{sec:newrc})
 \item validate the release candidate
-\item fix eventual problems found in the release candidate and repeat the last 2 steps until a valid release candidate is found
+\item fix eventual problems found in the release candidate and repeat the last 2 steps, create a new release candidate a validate it, until a valid release candidate is found
 \item create a final release as described above (\ref{sec:finalrelease}).
 \end{itemize}
 
