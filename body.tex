@@ -55,11 +55,16 @@ The following activities are done on a SW Product:
 \item operational activities, in stand alone mode, in an operational pipeline or as part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other Software Products.
 \end{itemize}
 
-A Software Product shall correspond to a single repository (git package). All its dependences are also a Software Product and therefore released separately. However, this is not the case for DM.
+A Software Product shall correspond to a single repository. 
+In other  words, there shall be a correspondence \textit{1:1} between Software Products and git packages.
+All the Software Prouct dependences are different Software Products and therefore released separately.
 
-In DM, where a Software Product is comprised of multiple git packages, a GitHub \textit{metapackage} is used to identify the Software Product.
+This is not the case of DM, where a Software Product is comprised of multiple git packages.
+The compromised solution in this case is to have a GitHub \textit{metapackage} that identify the Software Product.
 All git packages composing the Software Product are dependencies in a GitHub \textit{metapackage} and released at the same time.
 In this case, a git package shall be related only to one Software Product, and it is not by himself a Software Product.
+In other words, there is a correspondence \textit{1:many} between Software Product and Git packages. 
+There shall never be a \textit{many:many} correspondence.
 
 The following elements should not be part of a Software Product:
 
@@ -85,13 +90,15 @@ These files , and hence the dependencies,  are considered part of the source cod
 
 \subsection{Software Release} \label{sec:swrel}
 
-A software release is  a consciously identified version of a  software product
-documented with a software release note.
-The identifier is usually of the form M.n ( M.n.p in case of semantic versioning, see \secref{sec:versioning}): and is used also as a tag in the SW repository.
-%The tag is created on a release branch after manual checks on the last release candidate (see \secref{sec:releaseprocedure}).
+A software release is a consciously identified tag of a Software Product repository documented with a software release note.
+The identifier is usually of the form \texttt{M.n.p}.
 
-The tag in the Github repository and the software release note should be sufficient to identify the release, and therefore for a developer
+The tag in the Github repository and the software release note shall be sufficient to identify the release, and therefore for a developer
 to resolve the dependencies, build the binaries and execute the software.
+
+The software release is a monolithic snapshot of the Software Product to be used as is, or in its corresponding binary package(s), by the downstream processes or users.
+In theory, it should be possible to identify the release with a checksum calculated automatically on the delivered package.
+That checksum can be used to identify the release installed in an environment, or included in a distribution.
 
 
 \subsection{Binary Packages} \label{sec:swbpkg}
