@@ -1,25 +1,27 @@
 \section{Incorporating third party code } \label{sec:party3}
 
-Though the dev guide has a procedure \footnote{\url{https://developer.lsst.io/stack/packaging-third-party-eups-dependencies.html}}
-for making a third part package for inclusion in the pipelines distrib we have no official policy for how we accept and deal with such packages.
+The dev guide has a procedure \footnote{\url{https://developer.lsst.io/stack/packaging-third-party-eups-dependencies.html}}
+for making a third part package for inclusion in the pipelines distrib. In the future they may be other distributions as well.
+This procedure should be slightly modified such that the RFC is always flagged for CCB approval.
 
-
+A distribution is defined in \secref{sec:distribution} an example distribution would be the docker container available as the kernel in the notebook aspect of the science platform. A collaboration may wish to get some  non LSST code included in that distribution.
 
 There are several reasons to include third part code in our distributions:
 \begin{enumerate}
 \item There are packages which we use in our code e.g. starlink\_ast.  These are standard dependencies.  Currently these are put in lsst github org and probably should not be. Apart from that this is a well understood reason for third party code. \label{item:depend}
-\item There are packages which we want to use when working with the deployed software. AstroPy might be such an example - we don't need it to build or run our code but its sure handy for interaction with the data.\label{item:want}
+\item There are packages which we want to use when working with the deployed software. Pandas  might be such an example - we don't need it to build or run our code but its sure handy for interaction with the data.\label{item:want}
 \item A collaborator has a package which depends on our code and is intended for some form of post processing. Another example here would be an algorithm we want to use such as ngmix which we do not necessarily need to support. This is what most people on LSST are thinking about under the topic of third party software. \label{item:colab}
 \end{enumerate}
 
 
-In all three cases the DMCCB should decide if a package is to be included in the distribution. We currently only distribute pipelines and this is the code base most likely to be affected here. One could see a need to distribute AP separately from DRP in production - the principle would remain the same a package may be included in one or more distributions. The DMCCB needs to control the list of such packages.
+In all three cases the DMCCB should decide if a package is to be included in a given distribution. We currently only distribute pipelines and this is the code base most likely to be affected here. One could see a need to distribute AP separately from DRP in production - the principle would remain the same a package may be included in one or more distributions. The DMCCB needs to control the list of such packages.
 
 We currently handle dependencies such as in type \ref{item:depend} above using using EUPS and soon via conda. We could use the same mechanism for the other types of packages also,
 we should require the third party contributed packages are conda installable.
 
 \subsection{Support}\label{sec:support}
 We should take care to clarify that inclusion of a package in an LSST distribution does not imply support for that package.
+By support we mean that LSST personnel will not necessarily fix this package if has a problem.
 Packages included especially of the type \ref{item:colab} above, could be included as is not even necessarily built by our CI system nor do they need to conform to any LSST rules apart from licensing.
 These should not live in the LSST github org. We currently conflate inclusion in the distrib with inclusion in the org.
 We should create another github org such as lsst-community for these packages. Though if we use something like conda to install the requisite packages this is not strictly necessary.
@@ -30,4 +32,4 @@ In the case of type \ref{item:want} above we may want to have a certain level of
 
 In the case of type \ref{item:colab} above we should work with collaborators to include tests which exercises our code and interfaces in the way the code expects - this should be enough to alert us and our collaborators that the code may not work with some new release. The earlier we can catch this the better.
 \subsection{Migration}\label{sec:migration}
-If some collaborator code should prove very useful and is demonstrated  on say 1\% of data to provide results the community would like to have for all data then it should migrate to LSST proper and become supported. This would require work from the contributor and LSST staff to get the package to conform to an acceptable amount with LSST rules \footnote{We should have a set of acceptable rules e.g. it is essential to have unit tests, it is desirable to have a clean commit history.}.
+If some collaborator code should prove very useful and is demonstrated  on say 1\% of data to provide results the community would like to have for all data. Then if the the Project Science Team and DMCCB agree it should migrate to LSST proper and become supported. This would require work from the contributor and LSST staff to get the package to conform to an acceptable amount with LSST rules \footnote{We should have a set of acceptable rules e.g. it is essential to have unit tests, it is desirable to have a clean commit history.}.
