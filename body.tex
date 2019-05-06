@@ -3,7 +3,8 @@
 This release procedure is general and valid for all software products in the LSST Data Management subsystem.
 It is an abstraction of \citeds{SQR-016}, but it is assumed that the Jenkins builds used for the science pipelines can be applied in the same way to other software products.
 
-The release engineer should be in charge of the release activities documented here. All developers are not affected, except for backporting of fixes into release branches.
+The release engineer should be in charge of the release activities documented here. 
+All developers are not affected, except for backporting of fixes into release branches, when required.
 
 Section \ref{sec:statusAndProblems} summarizes the actual development process, and reports the derived problems that affect the release process.
 
@@ -86,6 +87,8 @@ A package may only depend on other packages. Third party dependencies are either
 
 The dependency information is provided in each git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
 These files , and hence the dependencies,  are considered part of the source code and controlled  and versioned in the same manner.
+
+
 
 
 \subsection{Software Release} \label{sec:swrel}
