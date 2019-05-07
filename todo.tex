@@ -1,23 +1,23 @@
 \newpage
 \section{Proposed Improvements}\label{sec:proimp}
 
-Given the definitions in section \ref{sec:definitions} and the current status and problems described in section \ref{sec:statusAndProblems}, following way forward is proposed.
+Given the definitions in section \ref{sec:definitions} and the current status and problems described in section \ref{sec:statusAndProblems}, the following way forward is proposed.
 
 \begin{itemize}
-\item identify a software products that requires to be tested soon.
-A possible candidate could be the \textit{Calibration} software product, in this moment part of the Science Pipleines. 
+\item identify a software products that requires delivery soon.
+A possible candidate could be the \textit{Calibration} pipeline for AuxTel which is now  part of the Science Pipelines.
 The software product shall be defined using a \textit{metapackage} that includes only the Git packages relevant to it.
-Git packages that are shared with others software products, need to be included in a different one, or the relevant code need to be moved in a specific Git package.
+Git packages that are shared with others software products, need to be included in a different metapackage,
 \item identify all the Git packages that are shared with other software products and included them in a \textit{library metapackage}.
-This libray metapackage is a software product itself and need to be managed and released separatelly.
-\item update the build system in order to be able to resolve the libray from the binary repository (EUPS)
+This library metapackage is a software product itself and needs to be managed and released separately.
+\item update the build system in order to be able to resolve the library from the binary repository (EUPS)
 \item update the tooling to deal with tagging (code-kit) and continuous integration (Jenkins scripts).
 \end{itemize}
 
-All the git packages included in a software product metapackage will be build and release all at the same time, as it is done now for the full Science Pipelines.
+All the git packages included in a software product metapackage will be built and released all at the same time, as it is done now for the full Science Pipelines.
 
-A software product metapackage depends on a library metapackage, and it will resolve the library binaries from the EUPS bonary repository.
-Dependencies between metapackages shall be handled differently, for example using a \textit{requirements.txt} file, than the usual eups requirements that are specified the the \textit{ups/gitpackagename.table}.
+A metapackage which depends on a library metapackage will resolve the library binaries from the EUPS binary repository.
+Dependencies between metapackages shall be handled differently, for example using a \textit{requirements.txt} file, than the usual EUPS requirements that are specified the the \textit{ups/gitpackagename.table}.
 The metapackage table file shall specify all Git packages included in the  software product.
 
 The above changes shall not affect the possibility to release the Science Pipelines as it is currently done.
