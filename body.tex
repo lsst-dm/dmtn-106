@@ -1,7 +1,7 @@
 \section{Introduction} \label{sec:intro}
 
-The release procedure documented in this document should be general and valid for all software products in the LSST Data Management subsystem.
-It is an abstraction of SQR-016, but it is supposed that the Jenkins builds used for the science pipelines can be applied in the same way to other Software Products.
+This release procedure is general and valid for all software products in the LSST Data Management subsystem.
+It is an abstraction of \citeds{SQR-016}, but it is assumed that the Jenkins builds used for the science pipelines can be applied in the same way to other software products.
 
 The release engineer should be in charge of the release activities documented here. All developers are not affected, except for backporting of fixes into release branches.
 
@@ -34,10 +34,10 @@ An environment is usually needed in the following contexts:
 \begin{itemize}
 \item software development: the environment includes all libraries and tools required to build and debug a software product
 \item software test and verification: the environment includes, on top of build and debug tools, additional tools to permit/facilitate the testing and validation activities.
-\item operations: the environment shall include only tools required for the execution of operational product. It shall not contain any build or debug tool. It shall be optimize for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
+\item operations: the environment shall include only tools required for the execution of operational product. It shall not contain any build or debug tools. It shall be optimized for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
 \end{itemize}
 
-These are the most common uses of an environment. Additional scenarios can be identified depending on the needs.
+These are the most common uses of an environment. Additional scenarios can be identified.
 
 In some cases, for simplicity, the same environment is used in development, tests and operations, but this does not justify the inclusion of the environment definition in the Software Product itself.
 
@@ -55,15 +55,15 @@ The following activities are done on a SW Product:
 \item operational activities, in stand alone mode, in an operational pipeline or as part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other Software Products.
 \end{itemize}
 
-A Software Product shall correspond to a single repository. 
+A Software Product shall correspond to a single repository.
 In other  words, there shall be a correspondence \textit{1:1} between Software Products and git packages.
-All the Software Prouct dependences are different Software Products and therefore released separately.
+All the Software Product dependencies are different Software Products and therefore released separately.
 
 This is not the case of DM, where a Software Product is comprised of multiple git packages.
 The compromised solution in this case is to have a GitHub \textit{metapackage} that identify the Software Product.
 All git packages composing the Software Product are dependencies in a GitHub \textit{metapackage} and released at the same time.
 In this case, a git package shall be related only to one Software Product, and it is not by himself a Software Product.
-In other words, there is a correspondence \textit{1:many} between Software Product and Git packages. 
+In other words, there is a correspondence \textit{1:many} between Software Product and Git packages.
 There shall never be a \textit{many:many} correspondence.
 
 The following elements should not be part of a Software Product:
@@ -93,7 +93,7 @@ These files , and hence the dependencies,  are considered part of the source cod
 A software release is a consciously identified tag of a Software Product repository documented with a software release note.
 The identifier is usually of the form \texttt{M.n.p}.
 
-The tag in the Github repository and the software release note shall be sufficient to identify the release, and therefore for a developer
+The tag in the Github repository and the software release note is sufficient to identify the release, and therefore for a developer
 to resolve the dependencies, build the binaries and execute the software.
 
 The software release is a monolithic snapshot of the Software Product to be used as is, or in its corresponding binary package(s), by the downstream processes or users.
@@ -144,7 +144,7 @@ Generalizing, the versioning scheme is the following:
 
 $M.n.p$
 
-where 
+where
 
 \begin{itemize}
 \item \textbf{M} is the major version identifier,
@@ -282,7 +282,7 @@ Following steps have to be used to create the first release candidate:
 \begin{itemize}
 \item create a release candidate in GitHub (Codekit\footnote{Code management toolkit \url{https://github.com/lsst-sqre/sqre-codekit}})
 \item execute a build (using Jenkins job run-rebuild)
-\item create and publish the packages. For the science pipelines, Eups packages are created and published in the package repository:
+\item create and publish the packages. For the science pipelines, EUPS packages are created and published in the package repository:
    \begin{itemize}
    \item source packages (using run-publish Jenkins job)
    \item binaries packages (using tarball Jenkins job)
@@ -303,21 +303,21 @@ The parameters required are:
 \end{itemize}
 
 For the science pipelines, the above steps are collected in one single Jenkins job:
- 
+
 \begin{verbatim}
 releases/official-release
 \end{verbatim}
 
-Note that for all software product using Eups, like for example the science pipelines, release candidates need to start with a $v$.
+Note that for all software product using EUPS, like for example the science pipelines, release candidates need to start with a $v$.
 
 \subsection{Other Related Artifacts}
 
 Together with the creation of the release candidate, other artifacts may need to be branched, and possibly have a first release candidate also:
 
 \begin{itemize}
-\item Documentation: to consolidate all information relevant for the new release. This includes the release note. 
+\item Documentation: to consolidate all information relevant for the new release. This includes the release note.
 As an example, for science pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
-\item  Environment definition packages, like for example packages containing conda environment files (yaml).
+\item  Environment definition packages, like for example packages containing conda environment files (YAML).
 \item  Distribution packages; still referring to the science pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
 \item Test data packages.
 \item Other packages not tagged automatically, but required to be inline with the released software.
@@ -360,11 +360,11 @@ Backporting mechanism can be summarized as follows \footnote{This needs to be do
 \begin{itemize}
 \item Create the backporting Jira issue DM-XYZ with subject \textit{Backport issue DM-XXX on release branch bM.n.x}
   \begin{itemize}
-  \item DM-XXX Jira issue has to be already in status reviewed or done, and the corresponding ticket branch already merged to master. 
+  \item DM-XXX Jira issue has to be already in status reviewed or done, and the corresponding ticket branch already merged to master.
   \item The ticket branch must not be deleted  until the backporting is concluded.
   \end{itemize}
 \item Create the backporting ticket branch \textit{tickets/DM-XYZ}  based on DM-XXX ticket branch
-\item Backport the fix from master to the release branch using the following command: 
+\item Backport the fix from master to the release branch using the following command:
   \begin{itemize}
    \item $git rebase --onto bM.n.x$.
   \end{itemize}
@@ -402,7 +402,7 @@ The release candidate 3 will require following parameters:
 \end{itemize}
 
 Generalizing, a release candidate N will be based on the release branch and the previous release candidate N-1.
- 
+
 
 \subsection{Final Release} \label{sec:finalrelease}
 
