@@ -21,19 +21,19 @@ The following technologies are already used in DM for packaging:
 
 The main tool used for distribution to operations and science community is \textbf{Docker}. 
 
-In \url{pipelines.lsst.io} instructions are provided on how to deploy a science pipelines docker image.
+In \url{pipelines.lsst.io} instructions are provided on how to deploy a Science Pipelines docker image.
 
 A second distribution approach is also provided, using the script \textit{newinstall.sh}. 
-This scripts permits to retrieve a specific science pipelines build or release available in the Eups repository, and setup the environment for its build and execution.
+This scripts permits to retrieve a specific Science Pipelines build or release available in the Eups repository, and setup the environment for its build and execution.
 
 
 \subsubsection{SW Products Identification} \label{sec:statusIdentification}
 
 The software products are developed using multiple GitHub packages. 
-A GitHub metapackage, for example \textit{lsst\_distrib} for science pipelines, is identifying the software product. 
-All git packages of a software product are dependencies in that metapackage, direct or indirect.
+A GitHub metapackage, for example \textit{lsst\_distrib} for Science Pipelines, is identifying the software product. 
+All Git packages of a software product are dependencies in that metapackage, direct or indirect.
 
-GitHub teams are used to differentiate between two types of git packages:
+GitHub teams are used to differentiate between two types of Git packages:
 
 \begin{itemize}
 \item \textbf{Data Management} team: it includes all dependencies of \textit{lsst\_distrib}
@@ -49,15 +49,15 @@ It includes not only the different pipelines, but also test data and build tools
 
 \subsubsection{Environment} \label{sec:statusEnvs}
 
-The conda environment to be used for building the science pipelines is defined in the Git package \textit{scipipe\_conda\_env}.
-No releases nor tags are made  on the conda environment git package.
+The conda environment to be used for building the Science Pipelines is defined in the Git package \textit{scipipe\_conda\_env}.
+No releases nor tags are made  on the conda environment Git package.
 
 \textit{TO BE CLARIFIED: how are java build environments managed?}
 
 
 \subsubsection{Build Tools} \label{sec:statusTools}
 
-The build tools used to build science pipelines software are available in \textit{lsstsw} and \textit{lsst\_build} git packages.
+The build tools used to build Science Pipelines software are available in \textit{lsstsw} and \textit{lsst\_build} Git packages.
 
 The Jenkins scripts also are an important part of the tooling, facilitating a large quantity of actions, like, test a ticket branch, automate releases, or provide periodic build (weekly/daily).
 
@@ -80,7 +80,7 @@ Their resolution may lead to a different development approach, and therefore the
 
 A GitHub package may be included in more than one software product.
 
-This make impossible to apply in a consistent way the release procedure to a SW products that is not the science pipelines.
+This make impossible to apply in a consistent way the release procedure to a SW products that is not the Science Pipelines.
 The reason is explained in the following example.
 
 Product A is composed by 100 Git packages.
@@ -118,7 +118,7 @@ All non DM 3rd party libraries, shall also not be part of the stack, if not requ
 
 \subsubsection{Binaries Persistence} \label{sec:problemPersistence}
 
-Each time we do a build, all git packages and rebuild. However, if the package is already installed in the local environment and is not affected by any changes, it will not be rebuild.
+Each time we do a build, all Git packages and rebuild. However, if the package is already installed in the local environment and is not affected by any changes, it will not be rebuild.
 
 In reality, once a package has been built, and the corresponding binaries have been made available, for a specific platform (linux, osx, etc), in the package repository (\url{https://eups.lsst.codes/}),
 it shall be possible for all the downstream users, to use it without building it again.

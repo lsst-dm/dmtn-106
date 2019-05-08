@@ -1,7 +1,7 @@
 \section{Introduction} \label{sec:intro}
 
 This release procedure is general and valid for all software products in the LSST Data Management subsystem.
-It is an abstraction of \citeds{SQR-016}, but it is assumed that the Jenkins builds used for the science pipelines can be applied in the same way to other software products. 
+It is an abstraction of \citeds{SQR-016}, but it is assumed that the Jenkins builds used for the Science Pipelines can be applied in the same way to other software products. 
 
 The release engineer should be in charge of the release activities documented here.  
 All developers are not affected, except for backporting of fixes into release branches, when required.
@@ -57,13 +57,13 @@ The following activities are done on a SW Product:
 \end{itemize}
 
 A software product shall correspond to a single repository.
-In other  words, there shall be a correspondence \textit{1:1} between software products and git packages.
+In other  words, there shall be a correspondence \textit{1:1} between software products and Git packages.
 All the software product dependencies are different software products and therefore released separately.
 
-This is not the case of DM, where a software product is comprised of multiple git packages.
+This is not the case of DM, where a software product is comprised of multiple Git packages.
 The compromised solution in this case is to have a GitHub \textit{metapackage} that identify the software product.
-All git packages composing the software product are dependencies in a GitHub \textit{metapackage} and released at the same time.
-In this case, a git package shall be related only to one software product, and it is not by himself a software product.
+All Git packages composing the software product are dependencies in a GitHub \textit{metapackage} and released at the same time.
+In this case, a Git package shall be related only to one software product, and it is not by himself a software product.
 In other words, there is a correspondence \textit{1:many} between software product and Git packages.
 There shall never be a \textit{many:many} correspondence.
 
@@ -85,7 +85,7 @@ The content of this subsection is a \textit{prerequisite} for any release proced
 
 A package may only depend on other packages. Third party dependencies are either packages or part of the conda environment.
 
-The dependency information is provided in each git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
+The dependency information is provided in each Git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
 These files , and hence the dependencies,  are considered part of the source code and controlled  and versioned in the same manner.
 
 
@@ -285,12 +285,12 @@ Following steps have to be used to create the first release candidate:
 \begin{itemize}
 \item create a release candidate in GitHub (Codekit\footnote{Code management toolkit \url{https://github.com/lsst-sqre/sqre-codekit}})
 \item execute a build (using Jenkins job run-rebuild)
-\item create and publish the packages. For the science pipelines, EUPS packages are created and published in the package repository:
+\item create and publish the packages. For the Science Pipelines, EUPS packages are created and published in the package repository:
    \begin{itemize}
    \item source packages (using run-publish Jenkins job)
    \item binaries packages (using tarball Jenkins job)
    \end{itemize}
-\item create the distribution package. Still for the science pipelines, a docker image is generate and made available in the docker repository:
+\item create the distribution package. Still for the Science Pipelines, a docker image is generate and made available in the docker repository:
    \begin{itemize}
    \item distribution generated and published using build-stack Jenkins job
    \end{itemize}
@@ -301,17 +301,17 @@ This procedure should be applied for all software products in the DM product tre
 
 The parameters required are:
 \begin{itemize}
-\item GIT\_REFs: the existing git references, for example "w.2018.52". This is the stable weekly build identified.
+\item GIT\_REFs: the existing Git references, for example "w.2018.52". This is the stable weekly build identified.
 \item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc1"
 \end{itemize}
 
-For the science pipelines, the above steps are collected in one single Jenkins job:
+For the Science Pipelines, the above steps are collected in one single Jenkins job:
 
 \begin{verbatim}
 releases/official-release
 \end{verbatim}
 
-Note that for all software product using EUPS, like for example the science pipelines, release candidates need to start with a $v$.
+Note that for all software product using EUPS, like for example the Science Pipelines, release candidates need to start with a $v$.
 
 \subsection{Other Related Artifacts}
 
@@ -319,9 +319,9 @@ Together with the creation of the release candidate, other artifacts may need to
 
 \begin{itemize}
 \item Documentation: to consolidate all information relevant for the new release. This includes the release note.
-As an example, for science pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
+As an example, for Science Pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
 \item  Environment definition packages, like for example packages containing conda environment files (YAML).
-\item  Distribution packages; still referring to the science pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
+\item  Distribution packages; still referring to the Science Pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
 \item Test data packages.
 \item Other packages not tagged automatically, but required to be inline with the released software.
 \end{itemize}
@@ -343,7 +343,7 @@ Practically, the validation in many cases can be:
 \item ask downstream users to act as beta testers.
 \end{itemize}
 
-For science pipelines, a characterization report is produced, in order to document the release outputs.
+For Science Pipelines, a characterization report is produced, in order to document the release outputs.
 This is a new document created for each major release.
 
 
@@ -392,7 +392,7 @@ Once one or more issues have been fixed on the release branch, a new release can
 The same steps used for generating the first release candidate, need to be used also in this case, with different parameters:
 
 \begin{itemize}
-\item GIT\_REFs: the starting git references, for example "bM.n.x M.n.p.rc1". Where available the release branch will be used instead of the previous release candidate
+\item GIT\_REFs: the starting Git references, for example "bM.n.x M.n.p.rc1". Where available the release branch will be used instead of the previous release candidate
 \item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc2"
 \end{itemize}
 
@@ -400,7 +400,7 @@ Further release candidates can be created just repeating the process with the ap
 The release candidate 3 will require following parameters:
 
 \begin{itemize}
-\item GIT\_REFs: the starting git references, for example "bM.n.x M.n.rc2". Where available the release branch will be used instead of the previous release candidate
+\item GIT\_REFs: the starting Git references, for example "bM.n.x M.n.rc2". Where available the release branch will be used instead of the previous release candidate
 \item GIT\_TAG: the release candidate to be generated, for example "M.n.rc3"
 \end{itemize}
 
