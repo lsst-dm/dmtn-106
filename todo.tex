@@ -1,20 +1,19 @@
 \newpage
 \section{Proposed Improvements}\label{sec:proimp}
 
-Given the definitions in section \ref{sec:definitions} and the current status and problems described in appendix \ref{sec:statusAndProblems}, the following way forward is proposed.
+Given the definitions in section \ref{sec:definitions} and the current status and problems described in the appendix \ref{sec:statusAndProblems}, the following way forward is proposed.
 
 \begin{itemize}
-\item identify a software products that requires delivery soon.
+\item identify a software product that requires delivery soon.
 A possible candidate could be the \textit{Calibration} pipeline which is now  part of the Science Pipelines, to be used soon for AuxTel commissioning.
-The software product shall be defined using a \textit{metapackage} that includes only the Git packages relevant to it.
-Git packages that are shared with others software products, need to be included in a different metapackage,
-\item identify all the Git packages that are shared with other software products and included them in a \textit{library metapackage}.
-This library metapackage is a software product itself and needs to be managed and released separately.
+The software product shall be defined using a \textit{meta-package} that includes only the Git packages relevant to it.
+\item identify all the Git packages that are shared with other software products and included them in a \textit{library meta-package}.
+This library meta-package is a software product itself and needs to be managed and released separately.
 \item update the build system in order to be able to resolve the library from the binary repository (EUPS)
 \item update the tooling to deal with tagging (code-kit) and continuous integration (Jenkins scripts).
 \end{itemize}
 
-All the Git packages included in a software product metapackage should be built and released all at the same time, as it is done now for the full Science Pipelines.
+All the Git repositories included in a software product meta-package should be built and released all at the same time, as it is done now for the full Science Pipelines.
 
-In a first stage, the above changes shall not affect the possibility to release the Science Pipelines as it is currently done.
+Initially, the above changes shall not affect the possibility to release the Science Pipelines as it is currently done.
 
