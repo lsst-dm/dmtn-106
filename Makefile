@@ -16,7 +16,7 @@ $(OBJ): $(tex) acronyms.tex
 
 #The generateAcronyms.py  script is in lsst-texmf/bin - put that in the path
 acronyms.tex :$(tex) myacronyms.txt
-	generateAcronyms.py   $(tex)
+	${TEXMFHOME}/../bin/generateAcronyms.py   $(tex)
 
 clean :
 	latexmk -c
