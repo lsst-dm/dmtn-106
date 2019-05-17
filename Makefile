@@ -1,8 +1,10 @@
 #for dependency you want all tex files  but for acronyms you do not want to include the acronyms file itself.
 tex=$(filter-out $(wildcard *acronyms.tex) , $(wildcard *.tex))  
 
+DOC= DMTN-106
+SRC= $(DOC).tex
 
-SRC= DMTN-106.tex
+export TEXMFHOME = lsst-texmf/texmf
 
 OBJ=$(SRC:.tex=.pdf)
 
