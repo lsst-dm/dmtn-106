@@ -6,7 +6,7 @@ It is an abstraction of \citeds{SQR-016}, but it is assumed that the Jenkins bui
 The release manager should be in charge of the release activities documented here.  
 All developers are not affected, except for backporting of fixes into release branches, when required.
 
-Section \ref{sec:statusAndProblems} summarizes the actual development process, and reports the derived problems that affect the release process.
+Section \ref{sec:statusAndProblems} summarizes the actual process and reports the derived problems that affect it.
 
 
 \subsection{Applicable Documents}
@@ -23,27 +23,27 @@ AUTH-NUM\= \kill
 \newpage
 \section{Definitions} \label{sec:definitions}
 
-This document uses certain terms which are often overloaded. In this section we define these terms  as intended in this document.
+This document uses certain terms which are often overloaded. In this section, we define these terms as intended in this document.
 
 
 \subsubsection{Environment} \label{sec:envdef}
 
-An environment is a set of libraries, executables and configurations, that are predefined for a specific context or function.
+An environment is a set of libraries, executables, and configurations, that are predefined for a specific context or function.
 
 An environment is usually needed in the following contexts:
 
 \begin{itemize}
 \item software development: the environment includes all libraries and tools required to build and debug a software product
-\item software test and verification: the environment includes, on top of build and debug tools, additional tools to permit/facilitate the testing and validation activities.
-\item operations: the environment shall include only tools required for the execution of operational product. It shall not contain any build or debug tools. It shall be optimized for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
+\item software test and verification: the environment includes, on top of the build and debug tools, additional tools to permit/facilitate the testing and validation activities.
+\item operations: the environment shall include only tools required for the execution of an operational product. It shall not contain any build or debug tools. It shall be optimized for the operational activities. \footnote{In case a problem is found in operation the first thing to do is to replicate it in a different environment, where also debug and further analysis is possible.}
 \end{itemize}
 
 These are the most common uses of an environment. Additional scenarios can be identified.
 
-In some cases the same environment is used in development, tests and operations.
+In some cases, the same environment is used in development, tests, and operations.
 
 Operational environment definitions should never be included in the software products.
-Vanilla environment definition are usually given for unit tests purposes or as an example.
+Vanilla environment definition can be provided for unit tests purposes or as an example.
 
 
 \subsection{Software Product} \label{sec:swprod}
@@ -56,28 +56,26 @@ The following activities are done on a SW Product:
 \item test activities, usually unit tests and system test
 \item release activities
 \item packaging activities
-\item operational activities, in stand alone mode, in an operational pipelineas part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other software products.
+\item operational activities, in standalone mode, in an operational pipelines part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other software products.
 \end{itemize}
 
 A software product shall correspond to a single repository.
-In other  words, there shall be a correspondence \textit{1:1} between software products and Git packages.
+In other words, there shall be a correspondence \textit{1:1} between software products and Git repositories.
 All the software product dependencies are different software products and therefore released separately.
 
-This is not the case of DM, where a software product is comprised of multiple Git packages.
-The compromised solution in this case is to have a GitHub \textit{metapackage} that identify the software product.
-All Git repositories composing the software product are dependencies in a GitHub \textit{metapackage} and released at the same time.
+This is not the case of DM, where a software product is comprised of multiple Git repositories.
+The compromised, solution in this case, is to have a Git \textit{meta-package} that identify the software product.
+All Git repositories composing the software product are dependencies in a Git \textit{meta-package} and released at the same time.
 In this case, a Git package shall be related only to one software product, and it is not by himself a software product.
-In other words, there is a correspondence \textit{1:many} between software product and Git packages.
+In other words, there is a correspondence \textit{1:many} between the software product and Git cwrepositoriespackages.
 There shall never be a \textit{many:many} correspondence.
 
-The following elements should not be part of a software product:
+The following elements should not be part of a software product, but follow a parallel development/release process:
 
 \begin{itemize}
-\item build tools, otherwise we will have build tools deployed in operations.
-\item environment definition, since the environment depends on the final instantiation of the software product that are not visible in the development phase.
+\item build tools, otherwise we will have them deployed in operations.
+\item environment definition (\ref{sec:envdef}) in general, with the exception of vanilla or example definitions.
 \end{itemize}
-
-These elements shall follow a parallel development / release process.
 
 Big test datasets should also not be included in a software product. 
 
@@ -86,50 +84,69 @@ The content of this subsection is a \textit{prerequisite} for any release proced
 
 \subsection{Dependencies} \label{sec:dependencies}
 
-A package may only depend on other packages. Third party dependencies are either packages or part of the conda environment.
+As defined in the above section \ref{sec:swprod}, each software product depends on other software products.
+It is not common the case where a software product has no dependencies.
 
-The dependency information is provided in each Git package in specific dependency files  according to the build system e.g.  requirements.txt, EUPS table file, etc.
-These files , and hence the dependencies,  are considered part of the source code and controlled  and versioned in the same manner.
+The software product dependencies can be divided into two main categories:
 
+\begin{itemize}
+\item other software products developed inside the same project.
+These dependencies are developed and released on their own, following the same development and release process.
+Their source code is not part of the software product.
+The dependency information is part of the software product, in a specific configuration file, therefore versioned altogether.
+\item third party packages, developed by a team that is not part of the project.
+These packages follow a completely different development and release process.
+They are not part of the software product.
+The dependency definition should, in general, be part of the environment definition, and therefore also not be part of the software product.
+\end{itemize}
 
+Both categories should be resolved from the binary package repository, ready to use, and not from the source code repository and rebuild before been used.
+This is especially true for the third-party packages and shall be enforced when releases are done.
 
 
 \subsection{Software Release} \label{sec:swrel}
 
-A software release is a consciously identified tag of a software product repository documented with a software release note.
+A software release is a consciously identified tag of a software product repository, documented with a software release note.
 The identifier is usually of the form \texttt{M.n.p}.
+
+A software release has been proved to work before the release tag is made in the repository.
+This ensures that a release meet the functionalities and fixes that are documented in the release note.
+
+When released, a software product shall depend only from other officially released software products and third-party packages.
 
 The tag in the Github repository and the software release note (\ref{sec:relnote}) are sufficient to identify the release, 
 and therefore for a developer to resolve the dependencies, build the binaries and execute the software.
 
-The software release is a monolithic snapshot of the software product to be used as is, a tag in the source code repository, or in its corresponding binary package, by the downstream processes or users.
+The software release is a monolithic snapshot of the software product to be used as is by the downstream processes or users.
 It should be possible also to identify the release with the checksum of the release's binary package, if available.
 That checksum can be used to identify which release is installed in an environment, or included in a distribution.
 
 
 \subsection{Binary Packages} \label{sec:swbpkg}
 
-A binary package is a package containing executable binaries for the corresponding release.
-It is created by building the software provided in the release tag. 
-It contains also compiled library code, supporting scripts, documentation and other files provided but not compiled, required to run the software product.
+A binary package is a package containing executable and/or libraries (binaries or not) for the corresponding release.
+It is created by building the software provided in the release tag and creating a package with the build outcome. 
+It contains also supporting scripts, documentation and other files provided but not compiled, required to run the software product.
 Binary packages can be created to support multiple platforms (such as Linux, macOS, windows) if required.
 
 Binaries packages shall be generated only once, and made available for their downstream use by dependent software or for deployment.
 
 The majority of DM software is using eupspkg for binary packaging. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
-Software products implemented in java are using jar/war binary packaging.
-\footnote{So far there are a few technologies used to handle binary packages. It is recommended to assess and optimize them, converging to use only one.
-Conda seems to have become a standard for python based projects.}
+Software products implemented in Java are using jar/war binary packaging.
+%\footnote{So far there are a few technologies used to handle binary packages. 
+%It is recommended to assess and optimize them, converging to use only one.
+%Conda seems to have become a standard for python based projects.}
+
 
 \subsection{Distribution} \label{sec:distribution}
 
 A distribution is a collection of objects to be deployed together.
-Those objects can be binary packages (ref{sec:swbpkg}), third party packages, data, source repository, tools etc.
+Those objects can be binary packages (ref{sec:swbpkg}), third-party packages, data, source repository, tools etc.
 
 A distribution can be used for different purposes:
 
 \begin{itemize}
-\item to make available software releases for operations or commissioning
+\item to make available software releases for operations
 \item to test (integration, validation, operation rehearsals) software releases
 \item to provide software releases to external collaborators.
 \end{itemize}
@@ -140,7 +157,7 @@ this may be distributed in a few ways, see \url{https://pipelines.lsst.io/instal
 
 \subsection{Versioning and Naming} \label{sec:versioning}
 DM will  switch to Semantic Versioning, specifically Semver 2.0.0. \footnote{\url{https://semver.org/spec/v2.0.0.html}}.
-This will help improve dependency management, and make  managing patch releases more comprehensible.
+This will help improve dependency management and make managing patch releases more comprehensible.
 The versioning schema will have 3 digits separated by a "." . For example :
 \\
 $16.0.0$
@@ -165,7 +182,6 @@ $16.1.0   \neq 16.10.0$
 DM software is currently versioned using two digits separated by a "." .
 For example Science Pipelines latest release:\\
 $17.0.1$
-The first number is the major version and the the second number is the minor version.
 
 
 \subsubsection{Branch Naming} \label{sec:branchnaming}
@@ -185,13 +201,13 @@ The letter \textbf{x} is a placeholder. It indicates that versions in a specific
 \newpage
 \section{Change control} \label{sec:changecontrol}
 
-The DMCCB is in charge of approving the changes which go in  all releases (major, minor, or patch).
+The DMCCB is in charge of approving the changes which go in all releases (major, minor, or patch).
 The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones \footnote{The DM Release Plan is in the process to be updated, see \jira{DM-17001}}.
 
-Changes to the release plan  thus are  at least partially controlled the LSST change control  process as  milestones are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
+Changes to the release plan thus are at least partially controlled the LSST change control process as milestones are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
 
 Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
-The issue should specify what needs to be fixed in the release and why, it shall specify DM issues that are requested to be included in the patch.
+The issue should specify what needs to be fixed in the release and why it shall specify DM issues that are requested to be included in the patch.
 
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
 
@@ -213,35 +229,40 @@ ensuring in this way that each issue is fully documented and self consistent\foo
 The release note is the document that identifies the SW (tag) under release in a human-readable language, easy to access and share. 
 It may contain technical details and/or narrative that fully characterize the release, and that may not always be available in the software repository.
 
-The following information should be  provided:
+The following information should be provided:
 \begin{itemize}
-\item Installation instructions. This is usually a manually written set of instructions.
-\item Narrative section describing the content of the release, this summary should be written by a person not auto generated.
+\item The installation instructions. This is usually a manually written set of instructions. 
+\item A narrative section describing the content of the release, this summary should be written by a person not auto-generated.
 The T/CAM of the product being released is responsible for making sure this is provided.
-\item List of jira issues included in a release. This information can be extracted from Github. Completed epics will be highlighted while other issues will  listed to be comprehensive.
-\item Technical information like the GitHub tag, dependencies,  etc. can be extracted automatically from Github or other tools.
+\item The list of Jira issues included in a release. This information can be extracted from Github. 
+Completed epics will be highlighted while other issues will be listed to be comprehensive.
+\item Technical information like the GitHub tag, dependencies, etc. can be extracted automatically from Github or other tools.
 \end{itemize}
+
+In addition, a list of implemented functionalities, requirements or completed milestones can be provided.
 
 
 \newpage
 \section{Software Release Procedure} \label{sec:releaseprocedure}
 
-This release procedure has been derived from the \textit{Stack release playbook} \citeds{SQR-016}.
+This release procedure has written generalizing the \textit{Stack release playbook} (\citeds{SQR-016}).
 
 \subsection{Development} \label{sec:dev}
 
-Development activities are not part of the release process, but are the starting point for a stable and reliable master branch in all Github software packages.
+Development activities are not part of the release process but are the starting point for a stable and reliable master branch in all Github software packages.
 The Developer Guide lays out the guidelines and process. All changes are done on ticket branches and reviewed using the Pull Request mechanism before merging to master.
 
 Each time a change is merged into master, the following activities should be performed:
 
 \begin{itemize}
-\item continuous integration build of the Github software package (SW product)
+\item continuous integration build of the Git repository (software product)
 \item if unit tests pass, generate binary packages
-\item build downstream dependencies: CI build on SW products that depend from the newly build SW product.
+\item build downstream dependencies: CI build on SW products that depend on the newly build SW product.
 \end{itemize}
 
-Continuous integration is done on a ticket branch prior to merging changes to master. Binary packages (EUPS) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
+Continuous integration is done also on a ticket branch prior to merging changes to master. 
+
+Binary packages (EUPS) and docker images for distribution are made available with the nightly and weekly builds (see next section \ref{sec:weekly}).
 
 
 \subsection{Nightly and Weekly builds} \label{sec:weekly}
