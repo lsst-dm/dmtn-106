@@ -285,9 +285,9 @@ releases - they are reference builds and, when they meet the criteria in \ref{se
 \subsection{Announcement} \label{sec:anaouncement}
 
 The preparation of the next release is announced using a community post.
-This has to be done few days before the release activity starts.
+This has to be done a few days before the release activity starts.
 
-In this way, all contributors will be able to provided feedback, for example additional issues expected to be included in the release.
+In this way, all contributors will be able to provide feedback, for example, additional issues expected to be included in the release.
 Based on the feedback, DMCCB can take corrective actions such as delaying the release.
 
 
@@ -314,7 +314,7 @@ Following steps have to be used to create the first release candidate:
    \item source packages (using run-publish Jenkins job)
    \item binaries packages (using tarball Jenkins job)
    \end{itemize}
-\item create the distribution package. Still for the Science Pipelines, a docker image is generate and made available in the docker repository:
+\item create the distribution package. Still, for the Science Pipelines, a docker image is generated and made available in the docker repository:
    \begin{itemize}
    \item distribution generated and published using build-stack Jenkins job
    \end{itemize}
@@ -325,8 +325,8 @@ This procedure should be applied for all software products in the DM product tre
 
 The parameters required are:
 \begin{itemize}
-\item GIT\_REFs: the existing Git references, for example "w.2018.52". This is the stable weekly build identified.
-\item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc1"
+\item GIT\_REFs: the existing Git references, for example, "w.2018.52". This is the stable weekly build identified.
+\item GIT\_TAG: the release candidate to be generated, for example, "17.0.0.rc1"
 \end{itemize}
 
 For the Science Pipelines, the above steps are collected in one single Jenkins job:
@@ -335,7 +335,9 @@ For the Science Pipelines, the above steps are collected in one single Jenkins j
 releases/official-release
 \end{verbatim}
 
-Note that for all software product using EUPS, like for example the Science Pipelines, release candidates need to start with a $v$.
+Note that for all software product using EUPS, like for example the Science Pipelines, release candidates need to start with a letter and not with a number.
+Currently, the letter $v$ is used.
+
 
 \subsection{Other Related Artifacts}
 
@@ -344,10 +346,10 @@ Together with the creation of the release candidate, other artifacts need to be 
 \begin{itemize}
 \item Documentation: to consolidate all information relevant for the new release. This includes the release note.
 As an example, for Science Pipelines, the package \textit{pipelines\_lsst\_io} need to be branched.
-\item  Environment definition packages, like for example packages containing conda environment files (YAML).
-\item  Distribution packages; still referring to the Science Pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
+\item Environment definition packages, like for example packages containing conda environment files (YAML).
+\item Distribution packages; still referring to the Science Pipelines, the package \textbf{lsst}  where \textit{newinstal.sh} is developed, need to be branched also.
 \item Test data packages.
-\item Other packages not tagged automatically, but required to be inline with the released software.
+\item Other packages not tagged automatically, but required to be in line with the released software.
 \end{itemize}
 
 
@@ -357,14 +359,14 @@ The release candidate needs to be validated.
 
 In an ideal case, a test campaign following a specific test plan should be conducted.
 This test campaign should demonstrate that the release candidate, and therefore the forthcoming release, is behaving as required and expected.
-T/CAM and product owner shall be responsible of this activity.
+T/CAM and product owner shall be responsible for this activity.
 
 Practically, the validation in many cases can be:
 
 \begin{itemize}
 \item installation/configuration of the binaries packages, or distribution image; usually done manually
 \item inspect of the installation, that all expected files and configuration are there
-\item execution of some demo package available case by case depending of the SW product
+\item execution of some demo package available case by case depending on the SW product
 \item try some use cases in order to prove that the release candidate is behaving properly
 \item ask downstream users to act as beta testers.
 \end{itemize}
@@ -380,17 +382,15 @@ This issue shall follow the usual development process as described in the develo
 The fix will be first implemented in a ticket branch, reviewed and merged to master.
 Once the fix has been proved to work, it can be backported to the release branch.
 
-The release branch will be created only for the packages to be fixed, and will follow the naming convention described in \ref{sec:branchnaming}.
+The release branch will be created only for the packages to be fixed and will follow the naming convention described in \ref{sec:branchnaming}.
 
-%Given a fix to backport, documented in DM-XXX Jira issue, and given a release branch bM.n.x,
-Backporting mechanism can be summarized as follows \footnote{This needs to be documented in the DevGuide}:
-
+A possible backporting mechanism can be summarized as follows:
 
 \begin{itemize}
 \item Create the backporting Jira issue DM-XYZ with subject \textit{Backport issue DM-XXX on release branch bM.n.x}
   \begin{itemize}
-  \item DM-XXX Jira issue has to be already in status reviewed or done, and the corresponding ticket branch already merged to master.
-  \item The ticket branch must not be deleted  until the backporting is concluded.
+  \item DM-XXX Jira issue has to be already in status reviewed or done.
+  \item The ticket branch must not be deleted until the backporting is concluded.
   \end{itemize}
 \item Create the backporting ticket branch \textit{tickets/DM-XYZ}  based on DM-XXX ticket branch
 \item Backport the fix, rebasing the branch \textit{tickets/DM-XYZ} from master to the release branch using the following command:
@@ -404,31 +404,32 @@ Backporting mechanism can be summarized as follows \footnote{This needs to be do
 \end{itemize}
 
 Note that porting mechanism is a development activity, under the responsibility of the development team, and therefore needs to be documented in the developer guide and removed from this document.
-This backporting procedure is just an example. Additional backporting mechanism can be proposed.
 
 In a special case, that an issue cannot be fixed on master, the ticket branch can be opened based on the release branch.
 
-The porting can be applied also in case that an issue, implemented on master after the the first release candidate has been created, has to be included in the release.
+The porting can be applied also in case that an issue, implemented on master after the first release candidate has been created, has to be included in the release.
 
-The DMCCB has to overview the backporting of issues to the release branch, and take corrective actions if needed. Backporting may require a considerable use of development resources and/or delay in the final release availability.
+The DMCCB has to overview the backporting process and take corrective actions if needed. 
+Backporting may require considerable use of development resources and/or delay in the final release availability.
 
 
 \subsection{Additional Release Candidates} \label{sec:newrc}
 
-Once one or more issues have been fixed on the release branch, a new release candidate has to be generated. %the Jenkins job \textit{official-release} using following parameters:
+Once one or more issues have been fixed on the release branch, a new release candidate has to be generated.
 The same steps used for generating the first release candidate, need to be used also in this case, with different parameters:
 
 \begin{itemize}
-\item GIT\_REFs: the starting Git references, for example "bM.n.x M.n.p.rc1". Where available the release branch will be used instead of the previous release candidate
-\item GIT\_TAG: the release candidate to be generated, for example "M.n.p.rc2"
+\item GIT\_REFs: the starting Git references, for example "b17.0.x 17.0.0.rc1". 
+This implies, where available the release branch will be used instead of the previous release candidate
+\item GIT\_TAG: the release candidate to be generated, for example "17.0.0.rc2"
 \end{itemize}
 
 Further release candidates can be created just repeating the process with the appropriate parameters.
-The release candidate 3 will require following parameters:
+The release candidate 3 will require the following parameters:
 
 \begin{itemize}
-\item GIT\_REFs: the starting Git references, for example "bM.n.x M.n.rc2". Where available the release branch will be used instead of the previous release candidate
-\item GIT\_TAG: the release candidate to be generated, for example "M.n.rc3"
+\item GIT\_REFs: the starting Git references, for example "b17.0.x 17.0.0.rc2". 
+\item GIT\_TAG: the release candidate to be generated, for example "17.0.0.rc3"
 \end{itemize}
 
 Generalizing, a release candidate N will be based on the release branch and the previous release candidate N-1.
@@ -438,11 +439,11 @@ Generalizing, a release candidate N will be based on the release branch and the 
 
 Once a final release candidate \textbf{Nf} has been identified, the final release can be created.
 
-To create the final release, just repeat the same steps used to created the release candidates, using following parameters:
+To create the final release, just repeat the same steps used to create the release candidates, using the following parameters:
 
 \begin{itemize}
-\item GIT\_REFs: "M.n.p.rcNf"
-\item GIT\_TAG: "M.n.p"
+\item GIT\_REFs: "17.0.0.rcNf"
+\item GIT\_TAG: "17.0.0"
 \end{itemize}
 
 Note that the final release is from a point of view of content identical to the last release candidate.
@@ -458,7 +459,7 @@ In the case that the DMCCB approves a proposed patch release, the process shall 
 \begin{itemize}
 \item create the release branches from the available release tags on the Github packages impacted by the fixes (if they don't exist)
 \item backport the requested issues
-\item create a release candidate, for example \textit{M.n.1.rc1} using the the same approach explained above (\ref{sec:newrc})
+\item create a release candidate, for example \textit{17.0.1.rc1} using the the same approach explained above (\ref{sec:newrc})
 \item validate the release candidate
 \item fix eventual problems found in the release candidate and repeat the last 2 steps, create a new release candidate a validate it, until a valid release candidate is found
 \item create a final release as described above (\ref{sec:finalrelease}).
