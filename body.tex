@@ -42,8 +42,8 @@ These are the most common uses of an environment. Additional scenarios can be id
 
 In some cases, the same environment is used in development, tests, and operations.
 
-Operational environment definitions should never be included in the software products.
-Vanilla environment definition can be provided for unit tests purposes or as an example.
+Operational environment definitions, including location-specific configuration, shall never be included in the software products.
+Vanilla environment definition can be provided for unit tests purposes, as an example or template.
 
 
 \subsection{Software Product} \label{sec:swprod}
@@ -61,13 +61,12 @@ The following activities are done on a SW Product:
 
 A software product shall correspond to a single repository.
 In other words, there shall be a correspondence \textit{1:1} between software products and Git repositories.
-All the software product dependencies are different software products and therefore released separately.
 
 This is not the case of DM, where a software product is comprised of multiple Git repositories.
 The compromised, solution in this case, is to have a Git \textit{meta-package} that identify the software product.
-All Git repositories composing the software product are dependencies in a Git \textit{meta-package} and released at the same time.
+All Git repositories composing the software product are enumerated in a Git \textit{meta-package} and released at the same time.
 In this case, a Git package shall be related only to one software product, and it is not by himself a software product.
-In other words, there is a correspondence \textit{1:many} between the software product and Git cwrepositoriespackages.
+In other words, there is a correspondence \textit{1:many} between the software product and Git repositories.
 There shall never be a \textit{many:many} correspondence.
 
 The following elements should not be part of a software product, but follow a parallel development/release process:
@@ -84,8 +83,9 @@ The content of this subsection is a \textit{prerequisite} for any release proced
 
 \subsection{Dependencies} \label{sec:dependencies}
 
-As defined in the above section \ref{sec:swprod}, each software product depends on other software products.
+As defined in the above section \ref{sec:swprod}, each software product depends, during build and runtime, on other software products.
 It is not common the case where a software product has no dependencies.
+\footnote{Here are not considered operational dependencies, or data flow dependencies.}
 
 The software product dependencies can be divided into two main categories:
 
@@ -151,11 +151,15 @@ A distribution can be used for different purposes:
 \item to provide software releases to external collaborators.
 \end{itemize}
 
+Distributions can be handled in different ways.
+Git metapackages, like \textit{lsst\_distrib}, or Docker images, are just a couple of examples.
+
 The main DM software product currently being distributed is the Science Pipeline Stack -
 this may be distributed in a few ways, see \url{https://pipelines.lsst.io/install/index.html}.
 
 
 \subsection{Versioning and Naming} \label{sec:versioning}
+
 DM will  switch to Semantic Versioning, specifically Semver 2.0.0. \footnote{\url{https://semver.org/spec/v2.0.0.html}}.
 This will help improve dependency management and make managing patch releases more comprehensible.
 The versioning schema will have 3 digits separated by a "." . For example :
