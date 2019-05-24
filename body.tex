@@ -131,8 +131,9 @@ The \textit{recipe} to build the binary package should be included in the softwa
 If this is not done, it shall be versioned separately, and this may generate process overhead.
 
 Binaries packages should be generated only once and made available for their downstream use by dependent software or for deployment.
-In the case that \textit{Semantic Versioning} is applicable, or the version of the dependencies to be resolved spans over a range, the package may need to be rebuilt if a dependency change, without changing the released tag.
-In order to distinguish, the Binary Package version identification shall include the build number in addition to the release version, as specified in \ref{sec:versioning}. 
+In some cases, the binary package may need to be rebuilt if a dependency change, without changing the released tag.
+This can happen for example when \textit{Semantic Versioning} is applicable or the version of the dependencies spans over a range.
+Therefore the version identification defined in later \ref{sec:versioning}, is not sufficient to identify the binary package. The build number shall be considered also.
 
 It should be possible also to identify the binary package with its checksum.
 That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the correspondin release.
@@ -208,6 +209,21 @@ where \textbf{M} is the major version and \textbf{n} is the minor version starti
 
 The letter  \textbf{b} indicates that this is a branch.
 The letter \textbf{x} is a placeholder. It indicates that versions in a specific branch will have a fixed \textbf{M.n} but different patch level, starting from \textbf{1}.
+
+\subsubsection{Binary Packages Build Naming} \label{sec:binpkgname}
+
+As mentioned above in \ref{sec:swbpkg}, binary packages may be generated multiple times for the same release.
+Therefore the build number is required, in order to uniquely identify each different build.
+
+Assuming that the build tools are able to provide a unique build number each time a build is done, 
+each binary package build will be identified as follows:
+
+\begin{verbatim}
+<M>.<n>.<p>-<bID>
+\end{verbatim}
+
+where \textbf{M}, \textbf{n} and \textbf{p} have the same meaning as explained in the above subsection \ref{sec:versioning},
+and \textbf{bID} is the unique build number provided by the build tool.
 
 
 \newpage
