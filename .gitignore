@@ -26,6 +26,7 @@
 DMTN-106.pdf
 acronyms.tex
 aglossary.tex
+meta.tex
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl

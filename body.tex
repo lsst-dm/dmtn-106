@@ -118,8 +118,6 @@ The tag in the Github repository and the software release note (\ref{sec:relnote
 and therefore for a developer to resolve the dependencies, build the binaries and execute the software.
 
 The software release is a monolithic snapshot of the software product to be used as is by the downstream processes or users.
-It should be possible also to identify the release with the checksum of the release's binary package, if available.
-That checksum can be used to identify which release is installed in an environment, or included in a distribution.
 
 
 \subsection{Binary Packages} \label{sec:swbpkg}
@@ -129,7 +127,15 @@ It is created by building the software provided in the release tag and creating 
 It contains also supporting scripts, documentation and other files provided but not compiled, required to run the software product.
 Binary packages can be created to support multiple platforms (such as Linux, macOS, windows) if required.
 
-Binaries packages shall be generated only once, and made available for their downstream use by dependent software or for deployment.
+The \textit{recipe} to build the binary package should be included in the software release tag.
+If this is not done, it shall be versioned separately, and this may generate process overhead.
+
+Binaries packages should be generated only once and made available for their downstream use by dependent software or for deployment.
+In the case that \textit{Semantic Versioning} is applicable, or the version of the dependencies to be resolved spans over a range, the package may need to be rebuilt if a dependency change, without changing the released tag.
+In order to distinguish, the Binary Package version identification shall include the build number in addition to the release version, as specified in \ref{sec:versioning}. 
+
+It should be possible also to identify the binary package with its checksum.
+That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the correspondin release.
 
 The majority of DM software is using eupspkg for binary packaging. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
 Software products implemented in Java are using jar/war binary packaging.
