@@ -48,7 +48,14 @@ Vanilla environment definition can be provided for unit tests purposes, as an ex
 
 \subsection{Software Product} \label{sec:swprod}
 
-A software product is a component of the subsystem (DM) product tree.
+A SW product is a \textit{defined} and \textit{controlled} software implementation with a specific scope, inside an overall system.
+
+\begin{itemize}
+\item \textit{defined}: it shall be clear which is the scope of the software product
+\item \textit{controlled}: the source code shall be maintained in a software repository, like for example GitHub.
+\end{itemize}
+
+%A software product is a component of the subsystem (DM) product tree.
 
 The following activities are done on a SW Product:
 \begin{itemize}
@@ -56,14 +63,15 @@ The following activities are done on a SW Product:
 \item test activities, usually unit tests and system test
 \item release activities
 \item packaging activities
-\item operational activities, in standalone mode, in an operational pipelines part of a service. Some SW Products are libraries, therefore are not operationally, but used as dependencies by other software products.
+\item operational activities, in standalone mode, in an operational pipeline or as part of a service. 
+Some SW Products are libraries, therefore are not operationally but used as dependencies by other software products.
 \end{itemize}
 
 A software product shall correspond to a single repository.
 In other words, there shall be a correspondence \textit{1:1} between software products and Git repositories.
 
 This is not the case of DM, where a software product is comprised of multiple Git repositories.
-The compromised, solution in this case, is to have a Git \textit{meta-package} that identify the software product.
+The compromised solution, in this case, is to have a Git \textit{meta-package} that identifies the software product.
 All Git repositories composing the software product are enumerated in a Git \textit{meta-package} and released at the same time.
 In this case, a Git package shall be related only to one software product, and it is not by himself a software product.
 In other words, there is a correspondence \textit{1:many} between the software product and Git repositories.
@@ -81,11 +89,36 @@ Big test datasets should also not be included in a software product.
 The content of this subsection is a \textit{prerequisite} for any release procedure to be applied.
 
 
+\subsection{Binary Packages} \label{sec:swbpkg}
+
+A binary package is a package containing executable and/or libraries (binaries or not).
+It is obtained by building the software provided in the repository (SHA1 or tag) and creating a package with the build outcome. 
+It may contains also supporting scripts, documentation and other files provided but not compiled, or just required to run the software product.
+Binary packages can be created to support multiple platforms, such as Linux, macOS, windows.
+
+The \textit{recipe} to build the binary package should be included in the software repository.
+If this is not done, it shall be versioned separately, and this may generate process overhead.
+
+Binaries packages should be generated only once and made available for their downstream use by dependent software or for deployment.
+In some cases, the binary package may need to be rebuilt if a dependency changes, without changing the software product tag or SHA1.
+This can happen for example when \textit{Semantic Versioning} is applicable or the version of the dependencies spans over a range.
+%Therefore the version identification defined in the following \ref{sec:versioning}, is not sufficient to identify the binary package. The build number shall be considered also.
+
+It should be possible also to identify the binary package with its checksum.
+That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the corresponding release.
+
+The majority of DM software is using EUPS packages. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
+Software products implemented in Java are using jar/war binary packaging.
+%\footnote{So far there are a few technologies used to handle binary packages. 
+%It is recommended to assess and optimize them, converging to use only one.
+%Conda seems to have become a standard for python based projects.}
+
+
 \subsection{Dependencies} \label{sec:dependencies}
 
 As defined in the above section \ref{sec:swprod}, each software product depends, during build and runtime, on other software products.
-It is not common the case where a software product has no dependencies.
-\footnote{Here are not considered operational dependencies, or data flow dependencies.}
+The case where a software product has no dependencies is not common.
+\footnote{Operational dependencies or data flow dependencies are not taken into account in this contest.}
 
 The software product dependencies can be divided into two main categories:
 
@@ -100,19 +133,19 @@ They are not part of the software product.
 The dependency definition should, in general, be part of the environment definition, and therefore also not be part of the software product.
 \end{itemize}
 
-Both categories should be resolved from the binary package repository, ready to use, and not from the source code repository and rebuild before been used.
+Both categories should be resolved from the binary package repository, ready to use, and not checkout and rebuilt from the source code each time.
 This is especially true for the third-party packages and shall be enforced when releases are done.
 
 
 \subsection{Software Release} \label{sec:swrel}
 
 A software release is a consciously identified tag of a software product repository, documented with a software release note.
-The identifier is usually of the form \texttt{M.n.p}.
+%The identifier is usually of the form \texttt{M.n.p}.
 
 A software release has been proved to work before the release tag is made in the repository.
-This ensures that a release meet the functionalities and fixes that are documented in the release note.
+This ensures that a release meets the functionalities and fixes that are documented in the release note.
 
-When released, a software product shall depend only from other officially released software products and third-party packages.
+A software product release shall depend only from other officially released software products.
 
 The tag in the Github repository and the software release note (\ref{sec:relnote}) are sufficient to identify the release, 
 and therefore for a developer to resolve the dependencies, build the binaries and execute the software.
@@ -120,35 +153,10 @@ and therefore for a developer to resolve the dependencies, build the binaries an
 The software release is a monolithic snapshot of the software product to be used as is by the downstream processes or users.
 
 
-\subsection{Binary Packages} \label{sec:swbpkg}
-
-A binary package is a package containing executable and/or libraries (binaries or not) for the corresponding release.
-It is created by building the software provided in the release tag and creating a package with the build outcome. 
-It contains also supporting scripts, documentation and other files provided but not compiled, required to run the software product.
-Binary packages can be created to support multiple platforms (such as Linux, macOS, windows) if required.
-
-The \textit{recipe} to build the binary package should be included in the software release tag.
-If this is not done, it shall be versioned separately, and this may generate process overhead.
-
-Binaries packages should be generated only once and made available for their downstream use by dependent software or for deployment.
-In some cases, the binary package may need to be rebuilt if a dependency change, without changing the released tag.
-This can happen for example when \textit{Semantic Versioning} is applicable or the version of the dependencies spans over a range.
-Therefore the version identification defined in later \ref{sec:versioning}, is not sufficient to identify the binary package. The build number shall be considered also.
-
-It should be possible also to identify the binary package with its checksum.
-That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the correspondin release.
-
-The majority of DM software is using eupspkg for binary packaging. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
-Software products implemented in Java are using jar/war binary packaging.
-%\footnote{So far there are a few technologies used to handle binary packages. 
-%It is recommended to assess and optimize them, converging to use only one.
-%Conda seems to have become a standard for python based projects.}
-
-
 \subsection{Distribution} \label{sec:distribution}
 
 A distribution is a collection of objects to be deployed together.
-Those objects can be binary packages (ref{sec:swbpkg}), third-party packages, data, source repository, tools etc.
+Those objects can be binary packages (\ref{sec:swbpkg}), third-party packages, data, source repository, tools, etc.
 
 The distribution configuration files shall be versioned and released as it is done for the software products.
 
@@ -165,6 +173,57 @@ Git metapackages, like \textit{lsst\_distrib}, or Docker images, are just a coup
 
 The main DM software product currently being distributed is the Science Pipeline Stack -
 this may be distributed in a few ways, see \url{https://pipelines.lsst.io/install/index.html}.
+
+
+\newpage
+\section{Change control} \label{sec:changecontrol}
+
+The DMCCB is in charge of approving the changes which go in all releases (major, minor, or patch).
+The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones \footnote{The DM Release Plan is in the process to be updated, see \jira{DM-17001}}.
+
+Changes to the release plan thus are at least partially controlled by the LSST change control process as milestones are moved or impacted by other changing milestones. 
+Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
+
+Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
+The issue should specify what needs to be fixed in the release and why it shall specify DM issues that are requested to be included in the patch.
+
+This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
+
+
+\subsection{Issue Management} \label{sec:issues}
+
+The release is identified in Jira using a release issue.
+
+All issues to be included in a release shall be added as blocking to the release issue.
+
+Note that, introducing the field \textit{Fix in Version(s)}, will permit having the same information in a much simpler way.
+Both release issue and \textit{Fix in Version(s)} fields can be used in parallel.
+Once the release is done, it will also be possible to complete the field \textit{Fix in Version(s)} with the exact release,
+ensuring in this way that each issue is fully documented and self consistent\footnote{process to be automated}.
+
+
+\subsection{Release Note} \label{sec:relnote}
+
+The release note is the document that identifies the SW (tag) under release in a human-readable language, easy to access and share. 
+It may contain technical details and/or narrative that fully characterize the release, and that may not always be available in the software repository.
+
+The following information should be provided:
+\begin{itemize}
+\item The installation instructions. This is usually a manually written set of instructions. 
+\item A narrative section describing the content of the release, this summary should be written by a person not auto-generated.
+The T/CAM of the product being released is responsible for making sure this is provided.
+\item The list of Jira issues included in a release. This information can be extracted from Github. 
+Completed epics will be highlighted while other issues will be listed to be comprehensive.
+\item Technical information like the GitHub tag, dependencies, etc. can be extracted automatically from Github or other tools.
+\end{itemize}
+
+In addition, a list of implemented functionalities, requirements or completed milestones can be provided.
+
+
+\newpage
+\section{Software Release Procedure} \label{sec:releaseprocedure}
+
+This release procedure is a generalization of the \textit{Stack release playbook} (\citeds{SQR-016}).
 
 
 \subsection{Versioning and Naming} \label{sec:versioning}
@@ -225,55 +284,6 @@ each binary package build will be identified as follows:
 where \textbf{M}, \textbf{n} and \textbf{p} have the same meaning as explained in the above subsection \ref{sec:versioning},
 and \textbf{bID} is the unique build number provided by the build tool.
 
-
-\newpage
-\section{Change control} \label{sec:changecontrol}
-
-The DMCCB is in charge of approving the changes which go in all releases (major, minor, or patch).
-The DM Release Plan LDM-564 provides the expected schedule for major features, based on the P6 milestones \footnote{The DM Release Plan is in the process to be updated, see \jira{DM-17001}}.
-
-Changes to the release plan thus are at least partially controlled the LSST change control process as milestones are moved or impacted by other changing milestones. Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
-
-Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
-The issue should specify what needs to be fixed in the release and why it shall specify DM issues that are requested to be included in the patch.
-
-This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
-
-
-\subsection{Issue Management} \label{sec:issues}
-
-The release is identified in Jira using a release issue.
-
-All issues to be included in a release shall be added as blocking to the release issue.
-
-Note that by introducing the field \textit{Fix in Version(s)}, will permit having the same information in a much simpler way.
-Both release issue and \textit{Fix in Version(s)} fields can be used in parallel.
-Once the release is done, it will also be possible to complete the field \textit{Fix in Version(s)} with the exact release,
-ensuring in this way that each issue is fully documented and self consistent\footnote{process to be automated}.
-
-
-\subsection{Release Note} \label{sec:relnote}
-
-The release note is the document that identifies the SW (tag) under release in a human-readable language, easy to access and share. 
-It may contain technical details and/or narrative that fully characterize the release, and that may not always be available in the software repository.
-
-The following information should be provided:
-\begin{itemize}
-\item The installation instructions. This is usually a manually written set of instructions. 
-\item A narrative section describing the content of the release, this summary should be written by a person not auto-generated.
-The T/CAM of the product being released is responsible for making sure this is provided.
-\item The list of Jira issues included in a release. This information can be extracted from Github. 
-Completed epics will be highlighted while other issues will be listed to be comprehensive.
-\item Technical information like the GitHub tag, dependencies, etc. can be extracted automatically from Github or other tools.
-\end{itemize}
-
-In addition, a list of implemented functionalities, requirements or completed milestones can be provided.
-
-
-\newpage
-\section{Software Release Procedure} \label{sec:releaseprocedure}
-
-This release procedure has written generalizing the \textit{Stack release playbook} (\citeds{SQR-016}).
 
 \subsection{Development} \label{sec:dev}
 
