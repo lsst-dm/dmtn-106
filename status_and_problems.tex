@@ -118,15 +118,17 @@ All third party libraries, shall also not be part of the stack, if not requiring
 
 \subsubsection{Binaries Persistence} \label{sec:problemPersistence}
 
-Each time the Science Pipelines is built, all Git repositories are rebuilt. However, if the package is already installed in the local environment and is not affected by any changes, it will not be rebuilt.
+EUPS builds a Git repository and installs the binary packages locally. 
+If a Git repository is not affected by any changes, once installed locally by EUPS, it will not be rebuilt.
 
-In reality, once a package has been built, and the corresponding binaries have been made available, for a specific platform (linux, macOS, etc), in the package repository (\url{https://eups.lsst.codes/}),
-it shall be possible for all the downstream users, to use it without building it again.
+Continuous integration tools instead are making available, in the remote repository at \url{https://eups.lsst.codes/}, the binary packages for macOS and Linux platforms.
+However, the build tools in lsstsw are not able to resolve the binary packages from that remote repository.
+Therefore, each time the Science Pipelines is built from scratch, all Git repositories are rebuilt.
 
 A Git repository should be rebuilt, only in case its source code has changed, or one of its dependencies has changed (in case of semantic versioning, only for breaking changes that increase the major version).
 
-\textbf{Requirement}: it shall be possible to resolve the package binaries from \url{https://eups.lsst.codes/} if available, instead of building them from the source code.
+\textbf{Requirement}: it shall be possible to resolve a package binaries from \url{https://eups.lsst.codes/} if available, instead of building it from the source code.
 
-This problem is not blocking on the release process, but its resolution permits optimization of the build.
+This problem is not blocking on the release process, but its resolution permits a better optimization of the builds.
 
 
