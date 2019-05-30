@@ -99,19 +99,15 @@ Binary packages can be created to support multiple platforms, such as Linux, mac
 The \textit{recipe} to build the binary package should be included in the software repository.
 If this is not done, it shall be versioned separately, and this may generate process overhead.
 
-Binaries packages should be generated only once and made available for their downstream use by dependent software or for deployment.
+Binaries packages for releases should be generated only once and made available for their downstream use by dependent software or for deployment.
 In some cases, the binary package may need to be rebuilt if a dependency changes, without changing the software product tag or SHA1.
 This can happen for example when \textit{Semantic Versioning} is applicable or the version of the dependencies spans over a range.
-%Therefore the version identification defined in the following \ref{sec:versioning}, is not sufficient to identify the binary package. The build number shall be considered also.
 
 It should be possible also to identify the binary package with its checksum.
 That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the corresponding release.
 
 The majority of DM software is using EUPS packages. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
 Software products implemented in Java are using jar/war binary packaging.
-%\footnote{So far there are a few technologies used to handle binary packages. 
-%It is recommended to assess and optimize them, converging to use only one.
-%Conda seems to have become a standard for python based projects.}
 
 
 \subsection{Dependencies} \label{sec:dependencies}
@@ -140,7 +136,6 @@ This is especially true for the third-party packages and shall be enforced when 
 \subsection{Software Release} \label{sec:swrel}
 
 A software release is a consciously identified tag of a software product repository, documented with a software release note.
-%The identifier is usually of the form \texttt{M.n.p}.
 
 A software release has been proved to work before the release tag is made in the repository.
 This ensures that a release meets the functionalities and fixes that are documented in the release note.
@@ -184,7 +179,7 @@ The DM Release Plan LDM-564 provides the expected schedule for major features, b
 Changes to the release plan thus are at least partially controlled by the LSST change control process as milestones are moved or impacted by other changing milestones. 
 Other changes not covered by the milestones such as features or content need to be proposed to the DMCCB using RFC Jira issues.
 
-Patch release requests should use an RFC Jira issue which must be approved by the DMCCB.
+Patch release requests should use an RFC Jira issue which must be approved by the DMCCB, as per \citeds{LDM-294}
 The issue should specify what needs to be fixed in the release and why it shall specify DM issues that are requested to be included in the patch.
 
 This process is documented in \citeds{LDM-294}, sections 3.6 and 7.4.
@@ -218,13 +213,6 @@ Completed epics will be highlighted while other issues will be listed to be comp
 \end{itemize}
 
 In addition, a list of implemented functionalities, requirements or completed milestones can be provided.
-
-
-\newpage
-\section{Software Release Procedure} \label{sec:releaseprocedure}
-
-This release procedure is a generalization of the \textit{Stack release playbook} (\citeds{SQR-016}).
-
 
 \subsection{Versioning and Naming} \label{sec:versioning}
 
@@ -283,6 +271,12 @@ each binary package build will be identified as follows:
 
 where \textbf{M}, \textbf{n} and \textbf{p} have the same meaning as explained in the above subsection \ref{sec:versioning},
 and \textbf{bID} is the unique build number provided by the build tool.
+
+
+\newpage
+\section{Software Release Procedure} \label{sec:releaseprocedure}
+
+This release procedure is a generalization of the \textit{Stack release playbook} (\citeds{SQR-016}).
 
 
 \subsection{Development} \label{sec:dev}
@@ -422,26 +416,7 @@ Once the fix has been proved to work, it can be backported to the release branch
 
 The release branch will be created only for the packages to be fixed and will follow the naming convention described in \ref{sec:branchnaming}.
 
-A possible backporting mechanism can be summarized as follows:
-
-\begin{itemize}
-\item Create the backporting Jira issue DM-XYZ with subject \textit{Backport issue DM-XXX on release branch bM.n.x}
-  \begin{itemize}
-  \item DM-XXX Jira issue has to be already in status reviewed or done.
-  \item The ticket branch must not be deleted until the backporting is concluded.
-  \end{itemize}
-\item Create the backporting ticket branch \textit{tickets/DM-XYZ}  based on DM-XXX ticket branch
-\item Backport the fix, rebasing the branch \textit{tickets/DM-XYZ} from master to the release branch using the following command:
-  \begin{itemize}
-   \item $git rebase --onto bM.n.x$.
-   \item Resolve conflicts in case there are some
-  \end{itemize}
-\item Open a PR from the backported ticket branch, \textit{tickets/DM-XYZ}, to merge it into the release branch
-\item Merge the backported branch into the release branch when the PR is approved
-\item Remove the backported ticket branch and the original ticket branch
-\end{itemize}
-
-Note that porting mechanism is a development activity, under the responsibility of the development team, and therefore needs to be documented in the developer guide and removed from this document.
+The developer guide will provide examples of backporting procedures (\jira{DM-19950}).
 
 In a special case, that an issue cannot be fixed on master, the ticket branch can be opened based on the release branch.
 

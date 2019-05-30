@@ -103,8 +103,13 @@ Note also that, each Git repository used for building, unit testing and packagin
 The high number of repositories causes problems in that it :
 
 \begin{itemize}
-\item increases the build time: each Git repository needs to build each time.
+\item increases the build time: each Git repository needs to build each time. 
+This imply that extra activities need to be done, such as clone, checkout, package creation and push to the \url{eups.lsst.code} repository.
+All these activities are not time consuming on itself, and may not represent a problem is just one repository is added.
+However, if the number of repositories included in a software product grows without control, the overall build time will become a problem.
 \item increases the release time: all Git repositories need to be built and released each time.
+As for the build time, adding one repository to the software product, will not represent a problem in terms of time.
+However, if the number of repositories grows without control, the overall time required to do a release will become a problem, especially for those software products that require patches to be available very quick.
 \item increases the failure probability: the tooling may be affected by network glitch or similar technical issues. 
 This may lead to the failure of the build/release process in a non-deterministic way.
 \end{itemize}
