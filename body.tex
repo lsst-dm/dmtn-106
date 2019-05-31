@@ -67,14 +67,11 @@ The following activities are done on a SW Product:
 Some SW Products are libraries, therefore are not operationally but used as dependencies by other software products.
 \end{itemize}
 
-A software product shall correspond to a single repository.
-In other words, there shall be a correspondence \textit{1:1} between software products and Git repositories.
+A software product should correspond to a single repository.
 
-This is not the case of DM, where a software product is comprised of multiple Git repositories.
-The compromised solution, in this case, is to have a Git \textit{meta-package} that identifies the software product.
-All Git repositories composing the software product are enumerated in a Git \textit{meta-package} and released at the same time.
-In this case, a Git package shall be related only to one software product, and it is not by himself a software product.
-In other words, there is a correspondence \textit{1:many} between the software product and Git repositories.
+In the case that a SW product is comprised of multiple Git repositories, each Git repository shall be related only to one software product.
+\footnote{In DM, a software product is comprised of multiple Git repositories.}
+In other words, there should be a correspondence \textit{1:1} (preferably) or \textit{1:many}, between software products and Git repositories.
 There shall never be a \textit{many:many} correspondence.
 
 The following elements should not be part of a software product, but follow a parallel development/release process:
@@ -94,7 +91,7 @@ The content of this subsection is a \textit{prerequisite} for any release proced
 A binary package is a package containing executable and/or libraries (binaries or not).
 It is obtained by building the software provided in the repository (SHA1 or tag) and creating a package with the build outcome. 
 It may contains also supporting scripts, documentation and other files provided but not compiled, or just required to run the software product.
-Binary packages can be created to support multiple platforms, such as Linux, macOS, windows.
+Binary packages can be created to support multiple platforms, such as Linux, macOS, Windows.
 
 The \textit{recipe} to build the binary package should be included in the software repository.
 If this is not done, it shall be versioned separately, and this may generate process overhead.
@@ -105,9 +102,6 @@ This can happen for example when \textit{Semantic Versioning} is applicable or t
 
 It should be possible also to identify the binary package with its checksum.
 That checksum can be used to identify which package is installed in an environment, or included in a distribution, and therefore the corresponding release.
-
-The majority of DM software is using EUPS packages. Other platforms can be considered, for example \textit{conda} or \textit{pypi}.
-Software products implemented in Java are using jar/war binary packaging.
 
 
 \subsection{Dependencies} \label{sec:dependencies}
@@ -423,6 +417,7 @@ In a special case, that an issue cannot be fixed on master, the ticket branch ca
 The porting can be applied also in case that an issue, implemented on master after the first release candidate has been created, has to be included in the release.
 
 The DMCCB has to overview the backporting process and take corrective actions if needed. 
+T/CAMs shall be involved in the process.
 Backporting may require considerable use of development resources and/or delay in the final release availability.
 
 

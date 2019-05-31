@@ -6,7 +6,7 @@ This procedure should be slightly modified such that the RFC is always flagged f
 
 A distribution is defined in \secref{sec:distribution} an example distribution would be the docker container available as the kernel in the notebook aspect of the science platform. A collaboration may wish to get some  non LSST code included in that distribution.
 
-There are several reasons to include third part code in our distributions:
+There are several reasons to include third-party code in our distributions:
 \begin{enumerate}
 \item There are packages which we use in our code e.g. starlink\_ast.  These are standard dependencies.  Currently these are put in lsst github org and probably should not be. Apart from that this is a well understood reason for third party code. \label{item:depend}
 \item There are packages which we want to use when working with the deployed software. Pandas  might be such an example - we don't need it to build or run our code but its sure handy for interaction with the data.\label{item:want}
