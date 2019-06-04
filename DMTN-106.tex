@@ -5,6 +5,8 @@
 
 % Local commands go here.
 
+\input meta.tex
+
 % To add a short-form title:
 \title{DM Release Process}
 
@@ -34,10 +36,13 @@ Release procedure applicable to all Data Management SW products.
   \addtohist{}{2019-02-04}{DM Release Process}{Gabriele Comoretto}
 }
 
+
 \begin{document}
 
-\maketitle
+\setDocUpstreamLocation{\url{https://github.com/lsst-dm/dmtn-106}}
+\setDocUpstreamVersion{\vcsrevision}
 
+\maketitle
 
 \input{body}
 \newpage
@@ -51,7 +56,7 @@ Release procedure applicable to all Data Management SW products.
 
 \newpage
 \section{References} \label{sec:bib}
-\bibliography{lsst,lsst-dm,refs_ads,refs,books}
+\bibliography{lsst,lsst-dm,refs_ads,refs,books,local}
 
 
 %Make sure lsst-texmf/bin/generateAcronyms.py is in your path
